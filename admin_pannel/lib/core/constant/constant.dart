@@ -27,4 +27,24 @@ class ConstantWidgets {
     return SizedBox(width: MeidaQuaryHelper.width(context) * 0.04);
   }
 
+  static Widget hight5(BuildContext context) {
+    return SizedBox(height: MeidaQuaryHelper.height(context) * 0.005);
+  }
+
+  static Widget hight15(BuildContext context) {
+    return SizedBox(height: MeidaQuaryHelper.height(context) * 0.015);
+  }
+
+  static Widget width5(BuildContext context) {
+    return SizedBox(width: MeidaQuaryHelper.width(context) * 0.005);
+  }
+
+  static Widget width10(BuildContext context) {
+    return SizedBox(width: MeidaQuaryHelper.width(context) * 0.01);
+  }
+
+  static Widget width12(BuildContext context) {
+    return SizedBox(width: MeidaQuaryHelper.width(context) * 0.012);
+  }
+
 }
