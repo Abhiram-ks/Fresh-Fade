@@ -1,0 +1,118 @@
+{
+  "project_info": {
+    "project_number": "613993761425",
+    "project_id": "fresh-fade-booking",
+    "storage_bucket": "fresh-fade-booking.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613993761425:android:a3bbdc00993d71eda6cd30",
+        "android_client_info": {
+          "package_name": "com.freshfade.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "613993761425-c8uto4763kflbsi40m0063r7tfn2mgu1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOLGTzX1nx1RNYJfFTqRqCCoLQIJeLSbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "613993761425-c8uto4763kflbsi40m0063r7tfn2mgu1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "613993761425-1mhhu5t692lkvnp006rkrq36e55cmmve.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.freshfade.barberpannel"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613993761425:android:753085bd27886c87a6cd30",
+        "android_client_info": {
+          "package_name": "com.freshfade.barberpannel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "613993761425-c8uto4763kflbsi40m0063r7tfn2mgu1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOLGTzX1nx1RNYJfFTqRqCCoLQIJeLSbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "613993761425-c8uto4763kflbsi40m0063r7tfn2mgu1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "613993761425-1mhhu5t692lkvnp006rkrq36e55cmmve.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.freshfade.barberpannel"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613993761425:android:a93739df20462c2aa6cd30",
+        "android_client_info": {
+          "package_name": "com.freshfade.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "613993761425-c8uto4763kflbsi40m0063r7tfn2mgu1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOLGTzX1nx1RNYJfFTqRqCCoLQIJeLSbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "613993761425-c8uto4763kflbsi40m0063r7tfn2mgu1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "613993761425-1mhhu5t692lkvnp006rkrq36e55cmmve.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.freshfade.barberpannel"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
