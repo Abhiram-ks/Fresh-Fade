@@ -47,3 +47,4 @@ app.*.map.json
 
 # Sensitive or local files
 /lib/service/security/hash_password.dart
+/lib/service/security/sensitive_keys.dart
