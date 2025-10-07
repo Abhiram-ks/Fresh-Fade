@@ -1,7 +1,12 @@
 import 'package:admin_pannel/core/constant/constant.dart';
 import 'package:admin_pannel/core/images/images.dart';
 import 'package:admin_pannel/core/themes/app_colors.dart';
-import 'package:admin_pannel/features/presentation/screens/login_credential.dart';
+import 'package:admin_pannel/features/data/datasource/auth_local_datasource.dart';
+import 'package:admin_pannel/features/data/datasource/auth_remote_datasource.dart';
+import 'package:admin_pannel/features/data/repo/auth_repo_impl.dart';
+import 'package:admin_pannel/features/domain/usecase/login_admin_usecase.dart';
+import 'package:admin_pannel/features/presentation/widgets/login_widget/login_credential.dart';
+import 'package:admin_pannel/features/presentation/state/bloc/login_bloc/login_bloc.dart';
 import 'package:admin_pannel/features/presentation/state/cubit/progresser_cubit/progresser_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,8 +17,11 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProgresserCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => ProgresserCubit()),
+        BlocProvider(create: (context) => LoginBloc(loginAdminUseCase:LoginAdminUseCase(repository: AuthRepositoryImpl(remoteDataSource: AuthRemoteDataSource()), localDb: AuthLocalDatasource()) )),
+      ],
       child: LayoutBuilder(
         builder: (context, constraints) {
           double screenWidth = constraints.maxWidth;
@@ -168,12 +176,12 @@ class LoginDetailsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Image.asset(AppImages.appLogo, width: 70, height: 70),
+        Image.asset(AppImages.appLogo, width: 60, height: 60),
         Text(
           'Fresh Fade',
           textAlign: TextAlign.center,
-          style: GoogleFonts.poppins(
-            fontSize: 18,
+          style: GoogleFonts.bellefair(
+            fontSize: 19,
             fontWeight: FontWeight.bold,
             color: AppPalette.blackColor,
           ),
@@ -181,7 +189,7 @@ class LoginDetailsWidget extends StatelessWidget {
         Text(
           'Executing Smarter, Managing Better',
           textAlign: TextAlign.center,
-          style: GoogleFonts.poppins(fontSize: 13, color: AppPalette.greyColor),
+          style: GoogleFonts.poppins(fontSize: 11, color: AppPalette.greyColor),
         ),
         ConstantWidgets.hight10(context),
         Text(
