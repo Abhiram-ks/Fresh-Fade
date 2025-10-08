@@ -1,9 +1,11 @@
-import 'package:admin_pannel/core/images/images.dart';
 import 'package:admin_pannel/core/themes/app_colors.dart';
+import 'package:admin_pannel/features/presentation/state/bloc/logout_bloc/logout_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../logout_widget/logout_state_handle.dart';
 
 class TabBarCustom extends StatelessWidget implements PreferredSizeWidget {
   const TabBarCustom({super.key, required this.screenWidth});
@@ -14,14 +16,9 @@ class TabBarCustom extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: AppPalette.whiteColor,
-      title: Row(
+      title: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(
-              AppImages.appLogo,
-              width: 55,
-              height: 55,
-              fit: BoxFit.contain,
-            ),
           Text(
             'Fresh Fade',
             style: GoogleFonts.bellefair(
@@ -29,16 +26,22 @@ class TabBarCustom extends StatelessWidget implements PreferredSizeWidget {
               fontWeight: FontWeight.w800,
             ),
           ),
+          Text('Admin Portel', style: GoogleFonts.poppins(fontSize: 10)),
         ],
       ),
       actions: [
         Padding(
           padding: EdgeInsets.only(right: screenWidth * .04),
-          child: IconButton(
-            onPressed: () {
-            
+          child: BlocListener<LogoutBloc, LogoutState>(
+            listener: (context, logout) {
+              handleLogoutState(context, logout);
             },
-            icon: Icon(CupertinoIcons.square_arrow_right),
+            child: IconButton(
+              onPressed: () {
+                context.read<LogoutBloc>().add(LogoutActionEvent());
+              },
+              icon: Icon(CupertinoIcons.square_arrow_right),
+            ),
           ),
         ),
       ],
@@ -48,10 +51,10 @@ class TabBarCustom extends StatelessWidget implements PreferredSizeWidget {
         indicatorSize: TabBarIndicatorSize.tab,
         indicator: UnderlineTabIndicator(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(width: 3.0, color: AppPalette.blackColor),
+          borderSide: BorderSide(width: 3.0, color: AppPalette.blueColor),
         ),
-        labelColor: AppPalette.blackColor,
-        unselectedLabelColor: AppPalette.blackColor,
+        labelColor: AppPalette.blueColor,
+        unselectedLabelColor: AppPalette.greyColor,
         tabs: [
           Tab(text: 'Administration'),
           Tab(text: 'Services'),

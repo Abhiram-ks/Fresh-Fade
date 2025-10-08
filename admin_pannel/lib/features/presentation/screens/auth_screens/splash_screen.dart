@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:admin_pannel/core/constant/constant.dart';
 import 'package:admin_pannel/core/images/images.dart';
 import 'package:admin_pannel/core/themes/app_colors.dart';
@@ -6,6 +8,7 @@ import 'package:admin_pannel/features/presentation/widgets/splash_widget/splash_
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/di/service_locator.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -13,7 +16,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SplashBloc()..add(SplashScreenRequest()),
+      create: (context) => sl<SplashBloc>()..add(SplashScreenRequest()),
       child: ColoredBox(
         color: AppPalette.blueColor,
         child: SafeArea(

@@ -3,6 +3,7 @@ import 'package:admin_pannel/core/routes/routes.dart';
 import 'package:admin_pannel/core/themes/app_themes.dart';
 import 'package:admin_pannel/features/presentation/state/bloc/service_manage_bloc/service_manage_bloc.dart';
 import 'package:admin_pannel/firebase_options.dart';
+import 'package:admin_pannel/service/cloudinary/cloudinary_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +11,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await init(); // Initialize dependency injection
+  CloudinaryConfig.initialize();
+  await init();
   runApp(const MyApp());
 }
 

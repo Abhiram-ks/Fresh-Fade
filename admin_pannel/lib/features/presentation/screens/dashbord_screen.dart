@@ -6,6 +6,9 @@ import 'package:admin_pannel/features/presentation/state/bloc/toggleview_bloc/to
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/di/service_locator.dart';
+import '../../data/datasource/auth_local_datasource.dart';
+import '../state/bloc/logout_bloc/logout_bloc.dart';
 import '../widgets/dashbord_widget/custom_tabbars.dart';
 
 class DashbordScreen extends StatelessWidget {
@@ -13,8 +16,11 @@ class DashbordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ToggleviewBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => ToggleviewBloc()),
+        BlocProvider(create: (context) => LogoutBloc(authLocalDatasource: sl<AuthLocalDatasource>())),
+      ],
       child: LayoutBuilder(
         builder: (context, constraints) {
           double screenHeight = constraints.maxHeight;
@@ -34,8 +40,14 @@ class DashbordScreen extends StatelessWidget {
                           screenHeight: screenHeight,
                           screenWidth: screenWidth,
                         ),
-                         ServiceScreen(screenHeight: screenHeight,screenWidth: screenWidth,),
-                       BannerManagement(screenHeight: screenHeight,screenWidth: screenWidth,)
+                        ServiceScreen(
+                          screenHeight: screenHeight,
+                          screenWidth: screenWidth,
+                        ),
+                        PromotionScreen(
+                          screenHeight: screenHeight,
+                          screenWidth: screenWidth,
+                        ),
                       ],
                     ),
                   ),
