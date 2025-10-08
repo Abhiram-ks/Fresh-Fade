@@ -1,4 +1,4 @@
-import 'package:admin_pannel/core/di/service_locator.dart';
+import 'package:admin_pannel/core/di/di.dart';
 import 'package:admin_pannel/core/routes/routes.dart';
 import 'package:admin_pannel/core/themes/app_themes.dart';
 import 'package:admin_pannel/features/presentation/state/bloc/service_manage_bloc/service_manage_bloc.dart';

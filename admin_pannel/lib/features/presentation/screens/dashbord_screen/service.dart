@@ -1,5 +1,5 @@
 
-import 'package:admin_pannel/core/di/service_locator.dart';
+import 'package:admin_pannel/core/di/di.dart';
 import 'package:admin_pannel/features/presentation/state/bloc/fetch_service_bloc/fetch_service_bloc.dart';
 import 'package:admin_pannel/features/presentation/state/cubit/progresser_cubit/progresser_cubit.dart';
 import 'package:flutter/cupertino.dart';

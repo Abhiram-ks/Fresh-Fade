@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:admin_pannel/core/constant/constant.dart';
 import 'package:admin_pannel/core/images/images.dart';
@@ -8,7 +7,7 @@ import 'package:admin_pannel/features/presentation/widgets/splash_widget/splash_
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/di/service_locator.dart';
+import '../../../../core/di/di.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

@@ -1,0 +1,65 @@
+import 'package:barber_pannel/features/auth/domain/usecase/auth_register_usecase.dart';
+import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
+part 'register_event.dart';
+part 'register_state.dart';
+
+class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
+  final RegisterBarberUseCase usecase;
+  String _fullName = '';
+  String _ventureName = '';
+  String _phoneNumber = '';
+  String _address = ''; 
+  String _email = '';
+  String _password = '';
+  bool _isVerified = false;
+  bool _isBlok = false;
+
+  String get fullNme => _fullName;
+  String get ventureName => _ventureName;
+  String get phoneNumber => _phoneNumber;
+  String get address => _address;
+  String get email => _email;
+  String get password => _password;
+  bool get isVerified => _isVerified;
+  bool get isBlok => _isBlok;
+  RegisterBloc({required this.usecase}) : super(RegisterInitial()) {
+    on<RegisterPersonInfo>((event, emit) {
+      _fullName = event.name;
+      _ventureName = event.venturename;
+      _phoneNumber = event.phonNumber;
+      _address = event.address;
+    });
+
+    on<RegisterCredential>((event, emit) {
+      _email = event.email;
+      _password = event.password;
+      _isVerified = event.isVerified;
+      _isBlok = event.isBloc;
+      emit(RegisterAlertBoxState(name: _fullName, venturename: _ventureName, email: _email));
+    });
+
+    on<RegisterSubmit>((event, emit) async{
+      emit(RegisterLoading());
+      try {
+        final response = await usecase.call(
+          barberName: _fullName, 
+          ventureName: _ventureName, 
+          phoneNumber: _phoneNumber, 
+          address: _address, 
+          email: email, 
+          password: password, 
+          isBloc: _isBlok, 
+          isVerified: _isVerified);
+         
+        if (response) {
+          emit(RegisterSuccess());
+        } else {
+          emit(RegisterFailure(error: 'Register Failed due to unknown Exception'));
+        }
+      } catch (e) {
+        emit(RegisterFailure(error: 'Register Failed due to unknown Exception'));
+      }
+    });
+  }
+}
