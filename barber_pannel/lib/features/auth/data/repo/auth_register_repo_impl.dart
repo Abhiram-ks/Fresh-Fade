@@ -1,4 +1,5 @@
 
+import 'package:barber_pannel/core/exceptions/auth_exceptions.dart';
 import 'package:barber_pannel/features/auth/data/datasource/auth_register_remotedatasouce.dart';
 import 'package:barber_pannel/features/auth/domain/repo/auth_register_repo.dart' show AuthRepository;
 
@@ -29,8 +30,10 @@ class AuthRepositoryImpl implements AuthRepository {
         isBloc: isBloc,
         isVerified: isVerified,
       );
-    } catch (e) {
+    } on AuthException {
       rethrow;
+    } catch (e) {
+      throw UnknownException('Registration failed: ${e.toString()}');
     }
   }
 }

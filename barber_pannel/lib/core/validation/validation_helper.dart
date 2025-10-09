@@ -21,11 +21,27 @@ class ValidatorHelper {
   static String? validatePassword(String? password){
     if(password == null || password.isEmpty){
       return 'please enter password';
-    }else if(password.length > 15){
+    }else if(password.length > 25){
       return 'Oops! That password doesn’t look right.';
     }
     return null;
   }
+
+    static String? validatePasswordMatch(
+      String? password, String? confirmPassword) {
+    if (password == null || password.isEmpty) {
+      return 'Create a new Password';
+    }
+    if (confirmPassword == null || confirmPassword.isEmpty) {
+      return 'Please fill the field';
+    }
+
+    if (password != confirmPassword) {
+      return 'Passwords do not match.';
+    }
+    return null;
+  }
+
 
     static String? validateText(String? text){
     if (text == null || text.isEmpty) {

@@ -1,4 +1,5 @@
 
+import 'package:barber_pannel/features/auth/presentation/screen/register_credential.dart';
 import 'package:flutter/material.dart';
 import '../../features/auth/presentation/screen/login_screen.dart';
 import '../../features/auth/presentation/screen/map_screen.dart';
@@ -11,6 +12,7 @@ class AppRoutes {
   static const String splash = '/';
   static const String login = '/login_screen.dart';
   static const String register = '/register_detail_screen.dart';
+  static const String registerCredential = '/register_credential.dart';
   static const String map = '/map_screen.dart';
 
 
@@ -22,8 +24,10 @@ class AppRoutes {
       return MaterialPageRoute(builder: (_) => LoginScreen());
       case register:
       return MaterialPageRoute(builder: (_) => RegisterDetailsScreen());
+      case registerCredential:
+      return MaterialPageRoute(builder: (_) => RegisterCredentialsScreen());
       case map:
-        final addressController = settings.arguments as TextEditingController;
+      final addressController = settings.arguments as TextEditingController;
       return MaterialPageRoute(builder: (_) => LocationMapPage(
         addressController: addressController,
       ));

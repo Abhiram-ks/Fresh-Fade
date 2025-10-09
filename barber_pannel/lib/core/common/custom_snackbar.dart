@@ -8,7 +8,7 @@ class CustomSnackBar {
     required String message,
     Color textColor = AppPalette.whiteColor,
     Color backgroundColor = Colors.black87,
-    int durationSeconds = 2,
+    int durationSeconds = 3,
      TextAlign textAlign = TextAlign.left,
   }) {
     ScaffoldMessenger.of(context).showSnackBar(

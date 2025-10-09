@@ -8,7 +8,7 @@ class RegisterPersonInfo extends RegisterEvent {
   final String venturename;
   final String phonNumber;
   final String address;
-  RegisterPersonInfo(this.phonNumber, this.address, {required this.name, required this.venturename});
+  RegisterPersonInfo({required this.name, required this.phonNumber, required this.venturename, required this.address,});
 }
 
 class RegisterCredential extends RegisterEvent {

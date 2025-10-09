@@ -15,6 +15,7 @@ import '../../../../core/common/custom_snackbar.dart';
 import '../../../../core/common/custom_testfiled.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/validation/validation_helper.dart';
+import '../state/bloc/register_bloc/register_bloc.dart';
 import 'login_screen.dart';
 
 class RegisterDetailsScreen extends StatelessWidget {
@@ -151,18 +152,21 @@ class _DetilsFormFieldState extends State<DetilsFormField> {
             context: context,
           ),
           ConstantWidgets.hight20(context),
-          // BlocSelector<RegisterSubmitionBloc, RegisterSubmitionState, bool>(
-          // selector: (state) => state is RegisterSuccess,
-          // builder: (context, state) {
-          //   return
+      
           CustomButton(
             onPressed: () {
               if (widget.formKey.currentState!.validate()) {
+                context.read<RegisterBloc>().add(RegisterPersonInfo(
+                  name: nameController.text.trim(),
+                  venturename: ventureNameController.text.trim(),
+                  phonNumber: phoneController.text,
+                  address: addressController.text,
+                ));  
+                Navigator.pushNamed(context, AppRoutes.registerCredential, arguments: addressController);
               } else {
                 CustomSnackBar.show(
                   context,
-                  message:
-                      'Please fill in all the required fields before proceeding.',
+                  message:'Please fill in all the required fields before proceeding.',
                   textAlign: TextAlign.center,
                   backgroundColor: AppPalette.redColor,
                 );
@@ -170,8 +174,6 @@ class _DetilsFormFieldState extends State<DetilsFormField> {
             },
             text: 'Next',
           ),
-          // },
-          // ),
         ],
       ),
     );

@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:barber_pannel/core/exceptions/auth_exceptions.dart';
 import 'package:barber_pannel/features/auth/domain/usecase/auth_register_usecase.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +18,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   bool _isVerified = false;
   bool _isBlok = false;
 
-  String get fullNme => _fullName;
+  String get fullName => _fullName;
   String get ventureName => _ventureName;
   String get phoneNumber => _phoneNumber;
   String get address => _address;
@@ -23,8 +26,10 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   String get password => _password;
   bool get isVerified => _isVerified;
   bool get isBlok => _isBlok;
+  
   RegisterBloc({required this.usecase}) : super(RegisterInitial()) {
     on<RegisterPersonInfo>((event, emit) {
+      log('RegisterPersonInfo: ${event.name} ${event.venturename} ${event.phonNumber} ${event.address}');
       _fullName = event.name;
       _ventureName = event.venturename;
       _phoneNumber = event.phonNumber;
@@ -39,26 +44,33 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       emit(RegisterAlertBoxState(name: _fullName, venturename: _ventureName, email: _email));
     });
 
-    on<RegisterSubmit>((event, emit) async{
+    on<RegisterSubmit>((event, emit) async {
       emit(RegisterLoading());
       try {
         final response = await usecase.call(
-          barberName: _fullName, 
-          ventureName: _ventureName, 
-          phoneNumber: _phoneNumber, 
-          address: _address, 
-          email: email, 
-          password: password, 
-          isBloc: _isBlok, 
-          isVerified: _isVerified);
-         
+          barberName: _fullName,
+          ventureName: _ventureName,
+          phoneNumber: _phoneNumber,
+          address: _address,
+          email: _email,
+          password: _password,
+          isBloc: _isBlok,
+          isVerified: _isVerified,
+        );
+
         if (response) {
           emit(RegisterSuccess());
         } else {
-          emit(RegisterFailure(error: 'Register Failed due to unknown Exception'));
+          emit(RegisterFailure(error: 'Registration failed. Please try again.'));
         }
+      } on AuthException catch (e) {
+        // Catch our custom exceptions with user-friendly messages
+        log('Auth Exception: ${e.message}');
+        emit(RegisterFailure(error: e.message));
       } catch (e) {
-        emit(RegisterFailure(error: 'Register Failed due to unknown Exception'));
+        // Catch any other unexpected errors
+        log('Unknown Exception: $e');
+        emit(RegisterFailure(error: 'An unexpected error occurred. Please try again.'));
       }
     });
   }
