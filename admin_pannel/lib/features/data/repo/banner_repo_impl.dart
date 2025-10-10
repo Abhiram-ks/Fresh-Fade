@@ -1,5 +1,5 @@
 import 'package:admin_pannel/features/domain/repo/banner_repo.dart';
-import 'package:admin_pannel/features/domain/domain/banner_entity.dart';
+import 'package:admin_pannel/features/domain/entity/banner_entity.dart';
 import '../datasource/banner_remote_datasource.dart';
 
 class BannerRepositoryImpl implements BannerRepository {

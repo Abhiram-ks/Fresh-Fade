@@ -1,4 +1,4 @@
-import '../domain/service_entity.dart';
+import '../entity/service_entity.dart';
 
 abstract class ServiceManagementRepository {
   Future<bool> uploadService(String serviceName);

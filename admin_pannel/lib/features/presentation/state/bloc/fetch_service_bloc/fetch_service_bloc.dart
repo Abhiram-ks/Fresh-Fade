@@ -1,4 +1,4 @@
-import 'package:admin_pannel/features/domain/domain/service_entity.dart';
+import 'package:admin_pannel/features/domain/entity/service_entity.dart';
 import 'package:admin_pannel/features/domain/usecase/fetch_service_usecase.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';

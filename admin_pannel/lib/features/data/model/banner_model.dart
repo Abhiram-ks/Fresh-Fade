@@ -1,4 +1,4 @@
-import '../../domain/domain/banner_entity.dart';
+import '../../domain/entity/banner_entity.dart';
 
 class BannerModel extends BannerEntity {
   const BannerModel({

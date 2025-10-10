@@ -67,7 +67,7 @@ class AdminRequestWidget extends StatelessWidget {
   final double screenWidth;
   final double screenHight;
 
-  final String _email =  "cavlogenoia@gmail.com";
+  final String _email =  "freshfade.growblic@gmail.com";
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +111,7 @@ class AdminRequestWidget extends StatelessWidget {
            ),
         ),
            Text(
-          "With appreciation, Team Cavalog",
+          "With appreciation, Team Fresh Fade",
           style: GoogleFonts.plusJakartaSans(
               fontSize: 14, fontWeight: FontWeight.w100),
         ),

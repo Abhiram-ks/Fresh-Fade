@@ -65,3 +65,44 @@ class UnknownException extends AuthException {
           code: 'unknown-error',
         );
 }
+
+// Login specific exceptions
+class InvalidCredentialsException extends AuthException {
+  InvalidCredentialsException()
+      : super(
+          'Invalid email or password. Please check your credentials and try again.',
+          code: 'invalid-credentials',
+        );
+}
+
+class UserNotFoundException extends AuthException {
+  UserNotFoundException()
+      : super(
+          'No account found with this email. Please register first.',
+          code: 'user-not-found',
+        );
+}
+
+class EmailNotVerifiedException extends AuthException {
+  EmailNotVerifiedException()
+      : super(
+          'Email not verified. Please verify your email to continue.',
+          code: 'email-not-verified',
+        );
+}
+
+class UserDisabledException extends AuthException {
+  UserDisabledException()
+      : super(
+          'Your account has been disabled. Please contact support.',
+          code: 'user-disabled',
+        );
+}
+
+class AccountBlockedException extends AuthException {
+  AccountBlockedException()
+      : super(
+          'Your account has been blocked. Please contact support.',
+          code: 'account-blocked',
+        );
+}

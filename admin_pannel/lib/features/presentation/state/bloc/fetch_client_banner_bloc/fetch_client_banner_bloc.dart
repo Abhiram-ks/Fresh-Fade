@@ -1,4 +1,4 @@
-import 'package:admin_pannel/features/domain/domain/banner_entity.dart';
+import 'package:admin_pannel/features/domain/entity/banner_entity.dart';
 import 'package:admin_pannel/features/domain/usecase/fetch_client_banner_usecase.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';

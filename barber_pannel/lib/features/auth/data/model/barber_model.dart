@@ -56,8 +56,12 @@ class BarberModel extends BarberEntity {
       detailImage: map['DetailImage'] ?? '',
       gender: map['gender'] ?? '',
       
-      createdAt: (map['createdAt'] as Timestamp).toDate(), 
-      updatedAt: (map['updateAt'] as Timestamp).toDate(),
+      createdAt: map['createdAt'] != null 
+          ? (map['createdAt'] as Timestamp).toDate() 
+          : null,
+      updatedAt: map['updatedAt'] != null 
+          ? (map['updatedAt'] as Timestamp).toDate() 
+          : null,
     );
   }
 

@@ -1,4 +1,4 @@
-import 'package:barber_pannel/core/exceptions/auth_exceptions.dart';
+import 'package:barber_pannel/core/error/auth_exceptions.dart';
 import 'package:barber_pannel/features/auth/data/model/barber_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

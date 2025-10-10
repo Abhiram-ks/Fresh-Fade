@@ -1,4 +1,6 @@
+import 'package:barber_pannel/features/auth/presentation/state/bloc/login_bloc/login_bloc.dart';
 import 'package:barber_pannel/features/auth/presentation/state/cubit/progresser_cubit/progresser_cubit.dart';
+import 'package:barber_pannel/features/auth/presentation/widget/login_widget/login_state_handle.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +10,7 @@ import '../../../../core/common/custom_button.dart';
 import '../../../../core/common/custom_snackbar.dart';
 import '../../../../core/common/custom_testfiled.dart';
 import '../../../../core/constant/constant.dart';
+import '../../../../core/di/injection_contains.dart';
 import '../../../../core/images/app_image.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../../core/themes/app_colors.dart';
@@ -18,8 +21,11 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProgresserCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => ProgresserCubit()),
+        BlocProvider(create: (context) => sl<LoginBloc>()),
+      ],
       child: LayoutBuilder(
         builder: (context, constraints) {
           double screenWidth = constraints.maxWidth;
@@ -117,9 +123,6 @@ class LoginScreenBody extends StatelessWidget {
   }
 }
 
-
-
-
 class LoginPolicyWidget extends StatelessWidget {
   final Function() onRegisterTap;
   final double screenWidth;
@@ -152,7 +155,7 @@ class LoginPolicyWidget extends StatelessWidget {
         ),
 
         ConstantWidgets.hight10(context),
-         Center(
+        Center(
           child: RichText(
             textAlign: TextAlign.center,
             text: TextSpan(
@@ -161,12 +164,13 @@ class LoginPolicyWidget extends StatelessWidget {
 
               children: [
                 TextSpan(
-                  text: prefixText,
+                  text: "Register",
                   style: TextStyle(color: AppPalette.buttonColor),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      onRegisterTap();
-                    },
+                  recognizer:
+                      TapGestureRecognizer()
+                        ..onTap = () {
+                          onRegisterTap();
+                        },
                 ),
               ],
             ),
@@ -274,45 +278,44 @@ class _LoginCredentialState extends State<LoginCredential> {
             isPasswordField: true,
           ),
 
-          
           Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            const Icon(
-              Icons.lock_clock_outlined,
-              size: 18,
-              color: AppPalette.buttonColor,
-            ),
-            ConstantWidgets.width20(context),
-            GestureDetector(
-              onTap: () {
-              },
-              child: Text(
-                "Forgot password?",
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: AppPalette.buttonColor,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const Icon(
+                Icons.lock_clock_outlined,
+                size: 18,
+                color: AppPalette.buttonColor,
+              ),
+              ConstantWidgets.width20(context),
+              GestureDetector(
+                onTap: () {},
+                child: Text(
+                  "Forgot password?",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppPalette.buttonColor,
+                  ),
                 ),
               ),
-            ),
-          ]),
+            ],
+          ),
           ConstantWidgets.hight20(context),
-          //   BlocListener<LoginBloc, LoginState>(
-          // listener: (context, login) {
-          //  loginStateHandle(context, login);
-          // },
-          //child:
+            BlocListener<LoginBloc, LoginState>(
+          listener: (context, login) {
+           handleLoginState(context, login);
+          },
+          child:
           CustomButton(
             text: 'Login',
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                // context.read<LoginBloc>().add(
-                //   LoginRequest(
-                //     email: _emailController.text.trim(),
-                //     password: _passwordController.text.trim(),
-                //   ),
-                // );
+                context.read<LoginBloc>().add(
+                  LoginActionEvent(
+                    email: _emailController.text.trim(),
+                    password: _passwordController.text.trim(),
+                  ),
+                );
               } else {
                 CustomSnackBar.show(
                   context,
@@ -323,7 +326,7 @@ class _LoginCredentialState extends State<LoginCredential> {
               }
             },
           ),
-          //),
+          ),
         ],
       ),
     );

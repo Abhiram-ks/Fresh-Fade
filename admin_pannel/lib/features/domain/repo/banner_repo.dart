@@ -1,4 +1,4 @@
-import '../domain/banner_entity.dart';
+import '../entity/banner_entity.dart';
 
 abstract class BannerRepository {
   Stream<BannerEntity> getClientBannerStream();

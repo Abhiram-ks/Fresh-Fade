@@ -1,6 +1,7 @@
 import 'package:barber_pannel/core/di/injection_contains.dart';
 import 'package:barber_pannel/core/routes/routes.dart';
 import 'package:barber_pannel/core/themes/app_themes.dart';
+import 'package:barber_pannel/features/auth/presentation/state/bloc/login_bloc/login_bloc.dart';
 import 'package:barber_pannel/features/auth/presentation/state/bloc/register_bloc/register_bloc.dart';
 import 'package:barber_pannel/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -19,11 +20,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<RegisterBloc>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => sl<RegisterBloc>()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Fresh Fide Business',
+        title: 'Fresh Fade Business',
         theme: AppTheme.lightTheme,
         initialRoute: AppRoutes.splash,
         onGenerateRoute: AppRoutes.generateRoute,

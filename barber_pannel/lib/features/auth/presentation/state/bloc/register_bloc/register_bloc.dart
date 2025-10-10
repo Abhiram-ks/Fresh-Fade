@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:barber_pannel/core/exceptions/auth_exceptions.dart';
+import 'package:barber_pannel/core/error/auth_exceptions.dart';
 import 'package:barber_pannel/features/auth/domain/usecase/auth_register_usecase.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';

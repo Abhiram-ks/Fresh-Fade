@@ -1,5 +1,5 @@
 
-import 'package:barber_pannel/core/exceptions/auth_exceptions.dart';
+import 'package:barber_pannel/core/error/auth_exceptions.dart';
 import 'package:barber_pannel/features/auth/data/datasource/auth_register_remotedatasouce.dart';
 import 'package:barber_pannel/features/auth/domain/repo/auth_register_repo.dart' show AuthRepository;
 
