@@ -145,4 +145,12 @@ Future<void> init() async {
       localDB: sl(),
       auth: sl())
   );
+
+  // Splash bloc
+  sl.registerFactory<SplashBloc>(
+    () => SplashBloc(
+      auth: sl(),
+      localDB: sl(),
+    ),
+  );
 }
