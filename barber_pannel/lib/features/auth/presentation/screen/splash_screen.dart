@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:barber_pannel/core/di/injection_contains.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/themes/app_colors.dart';
@@ -11,7 +14,8 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SplashBloc()..add(SplashScreenRequest()),
+      
+      create: (context) => sl<SplashBloc>()..add(SplashScreenRequest()),
       child: ColoredBox(
         color: AppPalette.buttonColor,
         child: SafeArea(

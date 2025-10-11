@@ -1,5 +1,5 @@
-
 import 'package:barber_pannel/core/di/injection_contains.dart';
+import 'package:barber_pannel/core/routes/routes.dart';
 import 'package:barber_pannel/core/themes/app_colors.dart';
 import 'package:barber_pannel/features/app/presentation/screens/setting/setting_screen.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_banner_bloc/fetch_banner_bloc.dart';
@@ -33,7 +33,8 @@ class BottomNavigationControllers extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => ButtomNavCubit()),
         BlocProvider(
-          create: (context) => sl<FetchBannersBloc>()..add(FetchBannersRequest()),
+          create:
+              (context) => sl<FetchBannersBloc>()..add(FetchBannersRequest()),
         ),
         BlocProvider(
           create: (context) => sl<FetchBarberBloc>()..add(FetchBarberRequest()),
@@ -46,21 +47,30 @@ class BottomNavigationControllers extends StatelessWidget {
         ),
         child: SafeArea(
           child: Scaffold(
-            body: BlocBuilder<ButtomNavCubit, NavItem>(
-              builder: (context, state) {
-                switch (state) {
-                  case NavItem.home:
-                    return _screens[0];
-                  case NavItem.revenue:
-                    return _screens[1];
-                  case NavItem.service:
-                    return _screens[2];
-                  case NavItem.chat:
-                    return _screens[3];
-                  case NavItem.profile:
-                    return _screens[4];
+            body: BlocListener<FetchBarberBloc, FetchBarberState>(
+              listener: (context, state) {
+                if(state is FetchBarberLoaded){
+                  if(state.barber.isBloc == true){
+                    Navigator.pushReplacementNamed(context, AppRoutes.login);
+                  }
                 }
               },
+              child: BlocBuilder<ButtomNavCubit, NavItem>(
+                builder: (context, state) {
+                  switch (state) {
+                    case NavItem.home:
+                      return _screens[0];
+                    case NavItem.revenue:
+                      return _screens[1];
+                    case NavItem.service:
+                      return _screens[2];
+                    case NavItem.chat:
+                      return _screens[3];
+                    case NavItem.profile:
+                      return _screens[4];
+                  }
+                },
+              ),
             ),
             bottomNavigationBar: BlocBuilder<ButtomNavCubit, NavItem>(
               builder: (context, state) {
@@ -84,7 +94,8 @@ class BottomNavigationControllers extends StatelessWidget {
                       iconSize: 26,
                       selectedItemColor: AppPalette.buttonColor,
                       backgroundColor: Colors.transparent,
-                      landscapeLayout: BottomNavigationBarLandscapeLayout.spread,
+                      landscapeLayout:
+                          BottomNavigationBarLandscapeLayout.spread,
                       unselectedLabelStyle: TextStyle(
                         color: AppPalette.hintColor,
                       ),

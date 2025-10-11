@@ -1,17 +1,18 @@
 import 'package:barber_pannel/core/di/injection_contains.dart';
 import 'package:barber_pannel/core/routes/routes.dart';
 import 'package:barber_pannel/core/themes/app_themes.dart';
-import 'package:barber_pannel/features/auth/presentation/state/bloc/login_bloc/login_bloc.dart';
 import 'package:barber_pannel/features/auth/presentation/state/bloc/register_bloc/register_bloc.dart';
 import 'package:barber_pannel/firebase_options.dart';
+import 'package:barber_pannel/service/cloudinary/cloudinary_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await init();
+  WidgetsFlutterBinding.ensureInitialized(); // Initialize Flutter
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform); // Initialize Firebase
+  await init(); // Initialize all dependencies
+  CloudinaryConfig.initialize(); // Initialize Cloudinary
   runApp(const MyApp());
 }
 
