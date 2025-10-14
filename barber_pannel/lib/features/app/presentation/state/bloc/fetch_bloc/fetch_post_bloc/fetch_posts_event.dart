@@ -1,4 +1,6 @@
 part of 'fetch_posts_bloc.dart';
 
 @immutable
-sealed class FetchPostsEvent {}
+abstract class FetchPostsEvent {}
+
+final class FetchPostsRequest extends FetchPostsEvent {}

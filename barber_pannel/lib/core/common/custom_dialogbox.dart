@@ -25,7 +25,9 @@ class CustomCupertinoDialog {
                   style: TextStyle(color: firstButtonColor),
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  if (Navigator.canPop(context)) {
+                      Navigator.of(context).pop();
+                  }
                   onTap(); 
                 },
               ),

@@ -1,5 +1,6 @@
 import 'package:barber_pannel/core/constant/constant.dart';
 import 'package:barber_pannel/core/di/injection_contains.dart';
+import 'package:barber_pannel/core/routes/routes.dart';
 import 'package:barber_pannel/core/themes/app_colors.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/logout_bloc/logout_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,8 +38,8 @@ class TabbarSettings extends StatelessWidget {
                 icon: CupertinoIcons.profile_circled,
                 title: 'Profile details',
                 onTap: () {
-                  // Navigator.pushNamed(context, AppRoutes.accountScreen,
-                  //     arguments: false);
+                   Navigator.pushNamed(context, AppRoutes.profile,
+                      arguments: false);
                 }),
             settingsWidget(
                 context: context,
@@ -46,8 +47,8 @@ class TabbarSettings extends StatelessWidget {
                 icon: CupertinoIcons.square_pencil,
                 title: 'Edit Profile',
                 onTap: () {
-                  // Navigator.pushNamed(context, AppRoutes.accountScreen,
-                  //     arguments: true);
+                     Navigator.pushNamed(context, AppRoutes.profile,
+                      arguments: true);
                 }),
             settingsWidget(
                 context: context,
@@ -55,8 +56,8 @@ class TabbarSettings extends StatelessWidget {
                 icon: CupertinoIcons.lock,
                 title: 'Change Password',
                 onTap: () {
-                  // Navigator.pushNamed(context, AppRoutes.resetPassword,
-                  //     arguments: false);
+                  Navigator.pushNamed(context, AppRoutes.password,
+                      arguments: false);
                 }),
             settingsWidget(
                 context: context,
@@ -64,7 +65,7 @@ class TabbarSettings extends StatelessWidget {
                 icon: CupertinoIcons.wrench,
                 title: 'Service Management',
                 onTap: () {
-                 // Navigator.pushNamed(context, AppRoutes.serviceManageScreen);
+                  Navigator.pushNamed(context, AppRoutes.serviceManage);
                 }),
             settingsWidget(
                 context: context,
@@ -72,7 +73,7 @@ class TabbarSettings extends StatelessWidget {
                 icon: CupertinoIcons.clock,
                 title: 'Time Management',
                 onTap: () {
-                  //Navigator.pushNamed(context, AppRoutes.timeManagementScreen);
+                  Navigator.pushNamed(context, AppRoutes.timeManagement);
                 }),
             settingsWidget(
                 context: context,

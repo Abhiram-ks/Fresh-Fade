@@ -23,6 +23,11 @@ class ConstantWidgets {
  static Widget hight80(BuildContext context) {
     return SizedBox(height: MeidaQuaryHelper.height(context) * 0.08);
   }
+
+  static Widget width10(BuildContext context){
+    return SizedBox(width: MeidaQuaryHelper.width(context) * 0.01);
+  }
+
   static Widget width20(BuildContext context){
     return SizedBox(width: MeidaQuaryHelper.width(context) * 0.02);
   }

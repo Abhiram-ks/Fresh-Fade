@@ -1,32 +1,55 @@
 import 'package:barber_pannel/features/app/data/datasource/banner_remote_datasource.dart';
 import 'package:barber_pannel/features/app/data/datasource/barber_remote_datasource.dart';
+import 'package:barber_pannel/features/app/data/datasource/barber_service_datasource.dart';
 import 'package:barber_pannel/features/app/data/datasource/post_remote_datasource.dart';
+import 'package:barber_pannel/features/app/data/datasource/service_remote_datasource.dart';
 import 'package:barber_pannel/features/app/data/repo/banner_repository_impl.dart';
 import 'package:barber_pannel/features/app/data/repo/barber_repository_impl.dart';
+import 'package:barber_pannel/features/app/data/repo/barber_service_repository_impl.dart';
 import 'package:barber_pannel/features/app/data/repo/image_picker_repo_impl.dart';
 import 'package:barber_pannel/features/app/data/repo/post_repository_impl.dart';
+import 'package:barber_pannel/features/app/data/repo/service_repository_impl.dart';
 import 'package:barber_pannel/features/app/domain/repo/banner_repository.dart';
 import 'package:barber_pannel/features/app/domain/repo/barber_repository.dart';
+import 'package:barber_pannel/features/app/domain/repo/barber_service_repository.dart';
 import 'package:barber_pannel/features/app/domain/repo/image_picker_repo.dart';
 import 'package:barber_pannel/features/app/domain/repo/post_repository.dart';
+import 'package:barber_pannel/features/app/domain/repo/service_repository.dart';
 import 'package:barber_pannel/features/app/domain/usecase/get_banner_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/get_barber_usecase.dart';
+import 'package:barber_pannel/features/app/domain/usecase/get_barber_services_usecase.dart';
+import 'package:barber_pannel/features/app/domain/usecase/get_posts_usecase.dart';
+import 'package:barber_pannel/features/app/domain/usecase/get_services_usecase.dart';
+import 'package:barber_pannel/features/app/domain/usecase/update_barber_usecase.dart';
+import 'package:barber_pannel/features/app/domain/usecase/updated_barber_service_usecase.dart';
+import 'package:barber_pannel/features/app/domain/usecase/upload_barber_service_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/upload_post_usecase.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/barber_/barber_service_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/barber_service_modification_bloc/barber_service_modification_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_barber_service_bloc/fetch_barber_service_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_banner_bloc/fetch_banner_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_barber_bloc/fetch_barber_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_post_bloc/fetch_posts_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_service_bloc/fetch_service_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/image_picker_bloc/image_picker_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/logout_bloc/logout_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/update_profile_bloc/update_profile_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/upload_post_bloc/upload_post_bloc.dart';
 import 'package:barber_pannel/service/cloudinary/cloudinary_service.dart';
 import 'package:barber_pannel/features/auth/data/datasource/auth_local_datasouce.dart';
 import 'package:barber_pannel/features/auth/data/datasource/auth_login_remotedatasoucre.dart';
+import 'package:barber_pannel/features/auth/data/datasource/password_local_datasouce.dart';
 import 'package:barber_pannel/features/auth/data/repo/auth_login_repo_impl.dart';
 import 'package:barber_pannel/features/auth/data/repo/auth_register_repo_impl.dart';
+import 'package:barber_pannel/features/auth/data/repo/password_repo_impl.dart';
 import 'package:barber_pannel/features/auth/domain/repo/auth_login_repo.dart';
 import 'package:barber_pannel/features/auth/domain/repo/auth_register_repo.dart';
+import 'package:barber_pannel/features/auth/domain/repo/password_repo.dart';
 import 'package:barber_pannel/features/auth/domain/usecase/auth_login_usecase.dart';
 import 'package:barber_pannel/features/auth/domain/usecase/auth_register_usecase.dart';
+import 'package:barber_pannel/features/auth/domain/usecase/password_usecase.dart';
 import 'package:barber_pannel/features/auth/presentation/state/bloc/login_bloc/login_bloc.dart';
+import 'package:barber_pannel/features/auth/presentation/state/bloc/password_bloc.dart/password_bloc.dart';
 import 'package:barber_pannel/features/auth/presentation/state/bloc/splash_bloc/splash_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -73,6 +96,14 @@ Future<void> init() async {
     ),
   );
 
+  // Password remote data source
+  sl.registerLazySingleton<PasswordRemoteDatasource>(
+    () => PasswordRemoteDatasource(
+      auth: sl(),                   // Inject FirebaseAuth
+      firestore: sl(),              // Inject FirebaseFirestore
+    ),
+  );
+
   // Banner remote data source
   sl.registerLazySingleton<BannerRemoteDatasource>(
     () => BannerRemoteDatasource(
@@ -94,6 +125,20 @@ Future<void> init() async {
     ),
   );
 
+  // Service remote data source
+  sl.registerLazySingleton<ServiceRemoteDatasource>(
+    () => ServiceRemoteDatasource(
+      firestore: sl(),  // Inject FirebaseFirestore
+    ),
+  );
+
+  // Barber service datasource
+  sl.registerLazySingleton<BarberServiceDatasource>(
+    () => BarberServiceDatasource(
+      firestore: sl(),  // Inject FirebaseFirestore
+    ),
+  );
+
   // Cloudinary service
   sl.registerLazySingleton<CloudinaryService>(
     () => CloudinaryService(),
@@ -108,6 +153,11 @@ Future<void> init() async {
 
   sl.registerLazySingleton<AuthLoginRepository>(
     () => AuthLoginRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Password repository
+  sl.registerLazySingleton<PasswordRepository>(
+    () => PasswordRepositoryImpl(remoteDatasource: sl()),
   );
 
   // Banner repository
@@ -131,6 +181,16 @@ Future<void> init() async {
     () => PostRepositoryImpl(remoteDatasource: sl()),
   );
 
+  // Service repository
+  sl.registerLazySingleton<ServiceRepository>(
+    () => ServiceRepositoryImpl(remoteDatasource: sl()),
+  );
+
+  // Barber service repository
+  sl.registerLazySingleton<BarberServiceRepository>(
+    () => BarberServiceRepositoryImpl(datasource: sl()),
+  );
+
   // !==================== Use Cases ====================
   sl.registerLazySingleton<RegisterBarberUseCase>(
     () => RegisterBarberUseCase(repository: sl()),
@@ -138,6 +198,11 @@ Future<void> init() async {
 
   sl.registerLazySingleton<LoginBarberUseCase>(
     () => LoginBarberUseCase(repository: sl()),
+  );
+
+  // Password usecase
+  sl.registerLazySingleton<PasswordUsecase>(
+    () => PasswordUsecase(passwordRepository: sl()),
   );
 
   // Banner use case
@@ -160,6 +225,35 @@ Future<void> init() async {
     () => UploadPostUseCase(repository: sl()),
   );
 
+  // Get posts use case
+  sl.registerLazySingleton<GetPostsUseCase>(
+    () => GetPostsUseCase(repository: sl()),
+  );
+
+  // Update barber use case
+  sl.registerLazySingleton<UpdateBarberUseCase>(
+    () => UpdateBarberUseCase(repository: sl()),
+  );
+
+  // Get services use case
+  sl.registerLazySingleton<GetServicesUseCase>(
+    () => GetServicesUseCase(repository: sl()),
+  );
+
+  // Upload barber service use case
+  sl.registerLazySingleton<UploadBarberServiceUseCase>(
+    () => UploadBarberServiceUseCase(repository: sl()),
+  );
+
+  // Get barber services use case
+  sl.registerLazySingleton<GetBarberServicesUseCase>(
+    () => GetBarberServicesUseCase(repository: sl()),
+  );
+
+  sl.registerLazySingleton<ModificationBarberUsecase>(
+    () => ModificationBarberUsecase(repository: sl()),
+  );
+
   // !==================== Blocs ====================
   // Blocs (Factory - creates new instance every time)
   sl.registerFactory<RegisterBloc>(
@@ -168,6 +262,11 @@ Future<void> init() async {
 
   sl.registerFactory<LoginBloc>(
     () => LoginBloc(usecase: sl()),
+  );
+
+  // Password bloc
+  sl.registerFactory<PasswordBloc>(
+    () => PasswordBloc(passwordUsecase: sl()),
   );
 
   // Banner bloc
@@ -212,5 +311,48 @@ Future<void> init() async {
       cloudService: sl(),
       uploadPostUseCase: sl(),
     ),
+  );
+
+  // Fetch posts bloc
+  sl.registerFactory<FetchPostsBloc>(
+    () => FetchPostsBloc(
+      localDB: sl(),
+      useCase: sl(),
+    ),
+  );
+
+  // Update profile bloc
+  sl.registerFactory<UpdateProfileBloc>(
+    () => UpdateProfileBloc(
+      cloudinaryService: sl(),
+      localDB: sl(),
+      updateBarberUseCase: sl(),
+    ),
+  );
+
+  // Fetch service bloc
+  sl.registerFactory<FetchServiceBloc>(
+    () => FetchServiceBloc(useCase: sl()),
+  );
+
+  // Barber service bloc
+  sl.registerFactory<BarberServiceBloc>(
+    () => BarberServiceBloc(
+      usecase: sl(),
+      localDB: sl(),
+    ),
+  );
+
+  // Fetch barber service bloc
+  sl.registerFactory<FetchBarberServiceBloc>(
+    () => FetchBarberServiceBloc(
+      useCase: sl(),
+      localDB: sl(),
+    ),
+  );
+
+  // Barber service modification bloc
+  sl.registerFactory<BarberServiceModificationBloc>(
+    () => BarberServiceModificationBloc(usecase: sl()),
   );
 }

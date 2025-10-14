@@ -15,5 +15,44 @@ class BarberRepositoryImpl implements BarberRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<bool> updateBarber({
+    required String uid,
+    String? barberName,
+    String? ventureName,
+    String? phoneNumber,
+    String? address,
+    String? image,
+    int? age,
+  }) async {
+    try {
+      return await remoteDatasource.updateBarber(
+        uid: uid,
+        barberName: barberName,
+        ventureName: ventureName,
+        phoneNumber: phoneNumber,
+        address: address,
+        image: image,
+        age: age,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
+  @override
+  Future<bool> uploadNewField({
+    required String uid,
+    required String imageUrl,
+    required String gender,
+  }) async {
+    try {
+      return await remoteDatasource.uploadNewField(uid: uid, imageUrl: imageUrl, gender: gender);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 

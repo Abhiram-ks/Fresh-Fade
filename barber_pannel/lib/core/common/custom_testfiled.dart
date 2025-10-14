@@ -84,6 +84,7 @@ class TextFormFieldWidget extends StatelessWidget {
                     enabled: enabled,
                     onChanged: onChanged,
                     minLines: minLines,
+                    
                     maxLines: isPasswordField ? 1 : maxLines,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(

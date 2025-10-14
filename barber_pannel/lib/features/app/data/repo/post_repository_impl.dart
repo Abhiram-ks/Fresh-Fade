@@ -1,4 +1,5 @@
 import 'package:barber_pannel/features/app/data/datasource/post_remote_datasource.dart';
+import 'package:barber_pannel/features/app/domain/entity/post_entity.dart';
 import 'package:barber_pannel/features/app/domain/repo/post_repository.dart';
 
 class PostRepositoryImpl implements PostRepository {
@@ -19,7 +20,18 @@ class PostRepositoryImpl implements PostRepository {
         description: description,
       );
     } catch (e) {
-      throw Exception('Failed to upload post: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Stream<List<PostEntity>> getPosts({required String barberId}) {
+    try {
+      return remoteDatasource.getPosts(barberId: barberId).map((postModels) {
+        return postModels.map((model) => model as PostEntity).toList();
+      });
+    } catch (e) {
+      rethrow;
     }
   }
 }

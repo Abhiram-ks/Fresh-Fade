@@ -288,7 +288,9 @@ class _LoginCredentialState extends State<LoginCredential> {
               ),
               ConstantWidgets.width20(context),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.password, arguments: true);
+                },
                 child: Text(
                   "Forgot password?",
                   style: GoogleFonts.poppins(

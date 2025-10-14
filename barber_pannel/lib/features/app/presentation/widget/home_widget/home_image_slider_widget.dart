@@ -1,7 +1,7 @@
 
 import 'package:barber_pannel/core/themes/app_colors.dart';
 import 'package:barber_pannel/features/app/domain/entity/banner_entity.dart';
-import 'package:barber_pannel/features/app/presentation/state/cubit/image_slider_bloc/image_slider_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/cubit/image_slider_cubit/image_slider_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';

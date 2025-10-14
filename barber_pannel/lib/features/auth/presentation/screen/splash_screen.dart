@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:barber_pannel/core/di/injection_contains.dart';
 import 'package:flutter/material.dart';

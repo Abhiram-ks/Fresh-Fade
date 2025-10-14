@@ -1,11 +1,16 @@
 
+import 'package:barber_pannel/features/app/presentation/screens/setting/profile_screen.dart';
+import 'package:barber_pannel/features/auth/presentation/screen/password_screen.dart';
 import 'package:barber_pannel/features/auth/presentation/screen/register_credential.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../features/app/presentation/screens/nav_screen.dart';
+import '../../features/app/presentation/screens/setting/service_manage/service_add_screen.dart';
+import '../../features/app/presentation/screens/setting/time_manage/time_management.dart' show TimeManagementScreen;
 import '../../features/auth/presentation/screen/login_screen.dart';
 import '../../features/auth/presentation/screen/map_screen.dart';
 import '../../features/auth/presentation/screen/register_detail_screen.dart';
+import '../../features/app/presentation/screens/setting/service_manage/service_manage_screen.dart';
 import '../../features/auth/presentation/screen/splash_screen.dart';
 import '../constant/constant.dart';
 
@@ -17,6 +22,11 @@ class AppRoutes {
   static const String registerCredential = '/register_credential.dart';
   static const String map = '/map_screen.dart';
   static const String nav = '/nav_cubit.dart';
+  static const String profile = '/profile_screen.dart';
+  static const String password = '/password_screen.dart';
+  static const String serviceManage = '/service_manage_screen.dart';
+  static const String serviceAdd = '/service_add_screen.dart';
+  static const String timeManagement = '/time_management.dart';
 
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -34,8 +44,23 @@ class AppRoutes {
       return MaterialPageRoute(builder: (_) => LocationMapPage(
         addressController: addressController,
       ));
+      case profile:
+      final isShow = settings.arguments as bool;
+      return CupertinoPageRoute(builder: (_) => ProfileScreen(isShow: isShow));
       case nav:
       return CupertinoPageRoute(builder: (_) => BottomNavigationControllers());
+      case password:
+      final isWhat = settings.arguments as bool;
+      return CupertinoPageRoute(builder: (_) => PasswordScreen(
+        isWhat: isWhat,
+      ));
+      case serviceManage:
+      return CupertinoPageRoute(builder: (_) => ServiceManageScreen());
+      case serviceAdd:
+      return CupertinoPageRoute(builder: (_) => ServiceAddScreen());
+      case timeManagement:
+      return CupertinoPageRoute(builder: (_) => TimeManagementScreen());
+
       default:
         return MaterialPageRoute(
           builder:

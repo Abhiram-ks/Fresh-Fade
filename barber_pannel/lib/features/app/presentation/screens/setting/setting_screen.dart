@@ -1,6 +1,7 @@
 import 'package:barber_pannel/core/constant/constant.dart';
 import 'package:barber_pannel/core/di/injection_contains.dart';
 import 'package:barber_pannel/core/images/app_image.dart';
+import 'package:barber_pannel/core/routes/routes.dart';
 import 'package:barber_pannel/features/auth/domain/entity/barber_entity.dart';
 import 'package:barber_pannel/features/auth/presentation/state/cubit/progresser_cubit/progresser_cubit.dart';
 import 'package:flutter/cupertino.dart';
@@ -99,7 +100,10 @@ class ProfileScrollView extends StatefulWidget {
 }
 
 class _ProfileScrollViewState extends State<ProfileScrollView>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   late TabController _tabController;
   late ScrollController _scrollController;
 
@@ -119,6 +123,7 @@ class _ProfileScrollViewState extends State<ProfileScrollView>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => sl<ImagePickerBloc>()),
@@ -201,7 +206,11 @@ class _ProfileScrollViewState extends State<ProfileScrollView>
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        // Navigator.pushNamed(context,AppRoutes.accountScreen,arguments: true);
+                                        Navigator.pushNamed(
+                                          context,
+                                          AppRoutes.profile,
+                                          arguments: true,
+                                        );
                                       },
                                       style: TextButton.styleFrom(
                                         backgroundColor: AppPalette.whiteColor,
