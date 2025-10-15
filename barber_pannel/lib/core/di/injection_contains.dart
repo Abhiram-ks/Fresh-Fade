@@ -21,6 +21,7 @@ import 'package:barber_pannel/features/app/domain/usecase/get_barber_services_us
 import 'package:barber_pannel/features/app/domain/usecase/get_posts_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/get_services_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/update_barber_usecase.dart';
+import 'package:barber_pannel/features/app/domain/usecase/update_barber_newdata_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/updated_barber_service_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/upload_barber_service_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/upload_post_usecase.dart';
@@ -35,6 +36,7 @@ import 'package:barber_pannel/features/app/presentation/state/bloc/image_picker_
 import 'package:barber_pannel/features/app/presentation/state/bloc/logout_bloc/logout_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/update_profile_bloc/update_profile_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/upload_post_bloc/upload_post_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/upload_service_data_bloc.dart/upload_service_data_bloc.dart';
 import 'package:barber_pannel/service/cloudinary/cloudinary_service.dart';
 import 'package:barber_pannel/features/auth/data/datasource/auth_local_datasouce.dart';
 import 'package:barber_pannel/features/auth/data/datasource/auth_login_remotedatasoucre.dart';
@@ -254,6 +256,11 @@ Future<void> init() async {
     () => ModificationBarberUsecase(repository: sl()),
   );
 
+  // Update barber newdata use case
+  sl.registerLazySingleton<UpdateBarberNewdataUsecase>(
+    () => UpdateBarberNewdataUsecase(repo: sl()),
+  );
+
   // !==================== Blocs ====================
   // Blocs (Factory - creates new instance every time)
   sl.registerFactory<RegisterBloc>(
@@ -354,5 +361,14 @@ Future<void> init() async {
   // Barber service modification bloc
   sl.registerFactory<BarberServiceModificationBloc>(
     () => BarberServiceModificationBloc(usecase: sl()),
+  );
+
+  // Upload service data bloc
+  sl.registerFactory<UploadServiceDataBloc>(
+    () => UploadServiceDataBloc(
+      cloudinary: sl(),
+      localDB: sl(),
+      usecase: sl(),
+    ),
   );
 }

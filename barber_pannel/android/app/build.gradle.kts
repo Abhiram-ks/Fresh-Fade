@@ -33,9 +33,9 @@ android {
         applicationId = "com.freshfade.barberpannel"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 23
+        minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = 3
+        versionCode = 10
         versionName = "1.0.0"
     }
     signingConfigs {
@@ -60,4 +60,5 @@ flutter {
 
 dependencies {
     implementation("com.google.android.material:material:1.12.0")
+    implementation("com.google.android.gms:play-services-base:18.5.0")
 }

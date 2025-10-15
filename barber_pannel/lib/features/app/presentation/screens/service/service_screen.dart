@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:barber_pannel/core/common/custom_button.dart';
+import 'package:barber_pannel/core/common/custom_snackbar.dart';
 import 'package:barber_pannel/core/constant/constant.dart';
 import 'package:barber_pannel/core/di/injection_contains.dart';
 import 'package:barber_pannel/core/images/app_image.dart';
@@ -9,6 +10,8 @@ import 'package:barber_pannel/features/app/presentation/screens/setting/setting_
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_barber_bloc/fetch_barber_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/image_picker_bloc/image_picker_bloc.dart';
 import 'package:barber_pannel/features/auth/domain/entity/barber_entity.dart';
+import 'package:barber_pannel/features/auth/presentation/state/cubit/progresser_cubit/progresser_cubit.dart';
+import 'package:barber_pannel/service/pdf/barber_pdf_service.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +21,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../../core/common/custom_appbar2.dart';
 import '../../state/bloc/upload_service_data_bloc.dart/upload_service_data_bloc.dart';
 import '../../state/cubit/gender_option_cubit/gender_option_cubit.dart';
+import '../../widget/service_widget/handle_state_service_upload.dart';
 
 class ServiceScreen extends StatelessWidget {
   const ServiceScreen({super.key});
@@ -26,8 +30,9 @@ class ServiceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => sl<FetchBarberBloc>()),
         BlocProvider(create: (context) => sl<ImagePickerBloc>()),
+        BlocProvider(create: (context) => sl<UploadServiceDataBloc>()),
+        BlocProvider(create: (context) => ProgresserCubit()),
         BlocProvider(create: (context) => GenderOptionCubit(initialGender: getGenderOptionFromString(null))),
       ],
       child: LayoutBuilder(
@@ -121,7 +126,7 @@ class ServiceScreen extends StatelessWidget {
   }
 }
 
-class ViewServiceDetailsPage extends StatelessWidget {
+class ViewServiceDetailsPage extends StatefulWidget {
   final double screenHeight;
   final double screenWidth;
   const ViewServiceDetailsPage({
@@ -131,26 +136,33 @@ class ViewServiceDetailsPage extends StatelessWidget {
   });
 
   @override
+  State<ViewServiceDetailsPage> createState() => _ViewServiceDetailsPageState();
+}
+
+class _ViewServiceDetailsPageState extends State<ViewServiceDetailsPage> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<FetchBarberBloc>().add(FetchBarberRequest());
-    });
+    super.build(context);
+
     return BlocBuilder<FetchBarberBloc, FetchBarberState>(
       builder: (context, state) {
         if (state is FetchBarberLoading) {
           return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CupertinoActivityIndicator(radius: 16.0),
-                ConstantWidgets.hight10(context),
-                Text('Just a moment...'),
-                Text('Please wait while we process your request'),
-              ],
-            ),
+            child: SizedBox(
+              height: 15,
+              width: 15,
+              child: CircularProgressIndicator(
+                color: AppPalette.hintColor,
+                backgroundColor: AppPalette.buttonColor,
+                strokeWidth: 2,
+              ),
+            )
           );
-        } else if (state is FetchBarberLoaded) {
+        } 
+        else if (state is FetchBarberLoaded) {
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Column(
@@ -169,40 +181,41 @@ class ViewServiceDetailsPage extends StatelessWidget {
                 ),
                 ConstantWidgets.hight20(context),
                 UploadingServiceDatas(
-                  screenWidth: screenWidth,
-                  screenHeight: screenHeight,
+                  screenWidth: widget.screenWidth,
+                  screenHeight: widget.screenHeight,
                   barber: state.barber,
                 ),
-                ConstantWidgets.hight10(context),
-                // ActionButton(
-                //   color: AppPalette.redClr,
-                //   screenWidth: screenWidth,
-                //   screenHight: screenHeight,
-                //   label: 'BarberDocs',
-                //   onTap: () async {
-                //     final success = await PdfMakerWidget.generateDetails(
-                //       barberName: state.barber.barberName,
-                //       ventureName: state.barber.ventureName,
-                //       phoneNumber: state.barber.phoneNumber,
-                //       address: state.barber.address,
-                //       email: state.barber.email,
-                //       establishedYear: state.barber.age,
-                //       gender: state.barber.gender,
-                //       status: state.barber.isblok ? 'Blocked' : 'Active',
-                //     );
-          
-                //     if (success == false) {
-                //       CustomeSnackBar.show(
-                //         // ignore: use_build_context_synchronously
-                //         context: context,
-                //         title: 'Unable to Open Docs',
-                //         description:
-                //             'Oops! Unable to open the Barber Data doc. Please try again later.',
-                //         titleClr: AppPalette.redClr,
-                //       );
-                //     }
-                //   },
-                // ),
+                
+              ConstantWidgets.hight10(context),
+              CustomButton(
+              onPressed: ()async {
+                try {
+                   final success = await BarberPdfService.generateBarberProfilePdf(
+                  barber: state.barber,
+                );
+                
+                if (context.mounted) {
+                  if (!success) {
+                    CustomSnackBar.show(
+                      context,
+                      message: 'Failed to generate PDF',
+                      textAlign: TextAlign.center,
+                      backgroundColor: AppPalette.redColor,
+                    );
+                  }
+                }
+                } catch (e) {
+                  if (context.mounted) {
+                  CustomSnackBar.show(
+                    context,
+                    message: e.toString(),
+                    textAlign: TextAlign.center,
+                    backgroundColor: AppPalette.redColor,
+                  ); 
+                  }
+                }
+              },
+              text: 'Barber PDF',),
               ],
             ),
           );
@@ -212,9 +225,8 @@ class ViewServiceDetailsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(CupertinoIcons.cloud_download_fill),
-              Text("Oop's Unable to complete the request."),
-              Text('Please try again later.'),
+              Text("Unable to complete the request.",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),),
+              Text('Please try again later.',textAlign: TextAlign.center,style: TextStyle(fontSize: 12),),
               IconButton(
                 onPressed: () {
                   context.read<FetchBarberBloc>().add(FetchBarberRequest());
@@ -279,7 +291,7 @@ void showReviewDetisSheet(
 
 
 
-class UploadingServiceDatas extends StatelessWidget {
+class UploadingServiceDatas extends StatefulWidget {
   const UploadingServiceDatas({
     super.key,
     required this.screenWidth,
@@ -292,12 +304,24 @@ class UploadingServiceDatas extends StatelessWidget {
   final double screenHeight;
 
   @override
-  Widget build(BuildContext context) {
+  State<UploadingServiceDatas> createState() => _UploadingServiceDatasState();
+}
+
+class _UploadingServiceDatasState extends State<UploadingServiceDatas> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final gender = getGenderOptionFromString(barber.gender);
+      final gender = getGenderOptionFromString(widget.barber.gender);
       context.read<GenderOptionCubit>().selectGenderOption(gender);
     });
-
+  }
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -313,26 +337,26 @@ class UploadingServiceDatas extends StatelessWidget {
             borderType: BorderType.RRect,
             radius: const Radius.circular(12),
             child: SizedBox(
-              width: screenWidth * 0.9,
-              height: screenHeight * 0.23,
+              width: widget.screenWidth * 0.9,
+              height: widget.screenHeight * 0.23,
               child: BlocBuilder<ImagePickerBloc, ImagePickerState>(
                 builder: (context, state) {
                   if (state is ImagePickerInitial) {
-                    if (barber.detailImage != null &&
-                        barber.detailImage!.isNotEmpty &&
-                        barber.detailImage!.startsWith('http')) {
+                    if (widget.barber.detailImage != null &&
+                        widget.barber.detailImage!.isNotEmpty &&
+                        widget.barber.detailImage!.startsWith('http')) {
                       return SizedBox(
-                        width: screenWidth * 0.89,
-                        height: screenHeight * 0.22,
+                        width: widget.screenWidth * 0.89,
+                        height: widget.screenHeight * 0.22,
                         child: imageshow(
-                          imageUrl: barber.detailImage!,
+                          imageUrl: widget.barber.detailImage!,
                           imageAsset: AppImages.appLogo,
                         ),
                       );
                     } else {
                       return SizedBox(
-                        width: screenWidth * 0.89,
-                        height: screenHeight * 0.22,
+                        width: widget.screenWidth * 0.89,
+                        height: widget.screenHeight * 0.22,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -350,7 +374,7 @@ class UploadingServiceDatas extends StatelessWidget {
                   } else if (state is ImagePickerLoading) {
                     return const CupertinoActivityIndicator(radius: 16.0);
                   } else if (state is ImagePickerLoaded) {
-                    return buildImagePreview(state: state,screenWidth: screenWidth*0.86,screenHeight: screenHeight*41,radius: 12);
+                    return buildImagePreview(state: state,screenWidth: widget.screenWidth*0.86,screenHeight: widget.screenHeight*41,radius: 12);
                   } else if (state is ImagePickerError) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -436,8 +460,8 @@ class UploadingServiceDatas extends StatelessWidget {
         ),
         ConstantWidgets.hight20(context),
         BlocListener<UploadServiceDataBloc, UploadServiceDataState>(
-          listener: (context, state) {
-            handleServiceWidgetState(context, state);
+          listener: (context, serviceState) {
+           handleServiceWidgetState(context, serviceState);
           },
           child: CustomButton(
               onPressed: () {
@@ -446,20 +470,15 @@ class UploadingServiceDatas extends StatelessWidget {
 
                 if (imageState is ImagePickerLoaded) {
                   context.read<UploadServiceDataBloc>().add(
-                      UploadServiceDataRequest(
+                     UploadServiceDataRequest(
                           imagePath: imageState.imagePath,
                           gender: genderState));
                 } else {
-                  CustomeSnackBar.show(
-                      context: context,
-                      title: 'Image Not Found!',
-                      description: 'Unable to proceed. Image not found. Please make sure an image is selected.',
-                      titleClr: AppPalette.redClr);
+                  CustomSnackBar.show(context, message: 'Image Not Found!', textAlign: TextAlign.center, backgroundColor: AppPalette.redColor);
                 }
               },
-              label: 'Upload',
-              screenHight: screenHeight),
-        )
+              text: 'Upload',),
+        ),
       ],
     );
   }
@@ -481,14 +500,14 @@ GenderOption getGenderOptionFromString(String? gender) {
 
 Widget buildImagePreview({required ImagePickerLoaded state,required double screenWidth,required double screenHeight,required int radius}) {
   final imageWidget = () {
-   if (state.imagePath != null && state.imagePath.startsWith('http')) {
+   if (state.imagePath.startsWith('http')) {
       return Image.network(
         state.imagePath,
         width: screenWidth ,
         height: screenHeight,
         fit: BoxFit.cover,
       );
-    } else if (state.imagePath != null && state.imagePath.isNotEmpty) {
+    } else if (state.imagePath.isNotEmpty) {
       return Image.file(
         File(state.imagePath),
         width: screenWidth,

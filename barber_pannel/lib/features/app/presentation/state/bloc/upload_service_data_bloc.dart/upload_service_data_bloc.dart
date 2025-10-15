@@ -21,7 +21,7 @@ class UploadServiceDataBloc extends Bloc<UploadServiceDataEvent, UploadServiceDa
     on<UploadServiceDataRequest>((event, emit) {
       imagePath = event.imagePath;
       genderOption = event.gender.name;
-      emit(UploadServiceDataLoading());
+      emit(UploadServiceDataDialogBox(gender: genderOption));
     });
 
     on<UploadServiceDataConfirmation>((event, emit) async  {
