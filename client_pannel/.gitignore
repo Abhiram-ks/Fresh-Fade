@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Security related and Cloudinary
+/lib/service/security/sensitive_keys.dart

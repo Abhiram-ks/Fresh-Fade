@@ -103,8 +103,8 @@ class ImageSlider extends StatelessWidget {
                 effect: const ExpandingDotsEffect(
                   dotHeight: 6,
                   dotWidth: 16,
-                  activeDotColor: AppPalette.blueColor,
-                  dotColor: Colors.grey,
+                  activeDotColor: AppPalette.buttonColor,
+                  dotColor: AppPalette.hintColor,
                   expansionFactor: 2,
                   spacing: 6,
                 ),
