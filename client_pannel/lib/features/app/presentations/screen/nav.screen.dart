@@ -1,6 +1,7 @@
 
 import 'package:client_pannel/features/app/data/repo/barbershop_repo_impl.dart';
 import 'package:client_pannel/features/app/presentations/state/bloc/fetch_bloc/fetch_barber_bloc/fetch_barber_bloc_bloc.dart';
+import 'package:client_pannel/features/app/presentations/state/bloc/fetch_bloc/fetch_chat_barber_leble_bloc/fetch_chat_barber_lebel_bloc.dart';
 import 'package:client_pannel/features/app/presentations/state/bloc/nearby_barbers_bloc/nearby_barbers_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,6 @@ class BottomNavigationControllers extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => sl<FetchUserBloc>()..add(FetchUserStarted())),
         BlocProvider(create: (context) => ButtomNavCubit()),
-        BlocProvider(create: (context) => LocationBloc(GetLocationUseCase())..add(GetCurrentLocationEvent())),
         BlocProvider(create: (context) => sl<FetchBannersBloc>()..add(FetchBannersRequest())),
         BlocProvider(create: (_) => NearbyBarbersBloc(GetNearbyBarberShops(BarberShopRepositoryImpl()))),
         BlocProvider(create: (context) => sl<FechPostWithBarberBloc>()..add(FetchPostWithBarberRequest())),
@@ -44,6 +44,8 @@ class BottomNavigationControllers extends StatelessWidget {
         BlocProvider(create: (context) => sl<ShareCubit>()), 
         BlocProvider(create: (context) => sl<FetchAllbarberBloc>()..add(FetchAllBarbersRequested())),
         BlocProvider(create: (context) => sl<VoiceSearchCubit>()), 
+        BlocProvider(create: (context) => sl<FetchChatBarberlebelBloc>()..add(FetchChatLebelBarberRequst())),
+
         
       ],
       child: Theme(

@@ -1,3 +1,4 @@
+import 'package:barber_pannel/core/common/custom_appbar2.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/common/custom_appbar.dart';
@@ -12,14 +13,18 @@ class ChatScreen extends StatelessWidget {
         final screenWidth = constraints.maxWidth;
         final screenHeight = constraints.maxHeight;
         return Scaffold(
-          appBar: CustomAppBar(),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                Text('Home'),
-              ],
-            ),
+          appBar: CustomAppBar2(
+            isTitle: true,
+            title: 'Chats',
+            actions: [
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.help_outline_outlined),
+              ),
+            ],
           ),
+          body: ChatScreenBodyWidget(
+                  screenHeight: screenHeight, screenWidth: screenWidth),
         );
       },
     );

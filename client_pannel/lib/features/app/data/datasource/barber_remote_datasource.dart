@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -49,7 +48,6 @@ class BarberRemoteDatasource {
           final rating = await ratingService.fetchAverageRating(barberId);
           return BarberModel.fromMap(snapshot.data() as Map<String, dynamic>,snapshot.id,rating);
         } catch (e) {
-          log('Error with rating: $e');
           rethrow;
         }
       } else {

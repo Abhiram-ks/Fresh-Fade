@@ -1,4 +1,5 @@
 
+import 'package:client_pannel/core/constant/constant.dart';
 import 'package:client_pannel/core/themes/app_colors.dart';
 import 'package:client_pannel/features/app/presentations/state/bloc/image_picker_bloc/image_picker_bloc.dart';
 import 'package:client_pannel/features/auth/presentations/state/cubit/progresser_cubit/progresser_cubit.dart';
@@ -15,62 +16,52 @@ class EmojiPickerCubit extends Cubit<bool> {
   void hideEmoji() => emit(false);
 }
 
-class ChatWindowTextFiled extends StatefulWidget {
+class ChatWindowTextFiled extends StatelessWidget {
   const ChatWindowTextFiled({
     super.key,
-    required this.controller,
+    required TextEditingController controller,
     required this.sendButton,
     this.icon,
     this.isICon = true,
-  });
+  }) : _controller = controller;
 
-  final TextEditingController controller;
+  final TextEditingController _controller;
   final VoidCallback sendButton;
   final bool isICon;
   final IconData? icon;
 
   @override
-  State<ChatWindowTextFiled> createState() => _ChatWindowTextFiledState();
-}
+  Widget build(BuildContext context) {
+    final focusNode = FocusNode();
 
-class _ChatWindowTextFiledState extends State<ChatWindowTextFiled> {
-  late FocusNode _focusNode;
-
-  @override
-  void initState() {
-    super.initState();
-    _focusNode = FocusNode();
-    _focusNode.addListener(() {
-      if (_focusNode.hasFocus) {
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
         context.read<EmojiPickerCubit>().hideEmoji();
       }
     });
-  }
-
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
 
     return Column(
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-          color: AppPalette.whiteColor,
+          decoration: BoxDecoration(
+            color: AppPalette.whiteColor,
+            boxShadow: [
+              BoxShadow(
+                color: AppPalette.blackColor.withValues(alpha: 0.1),
+                offset: const Offset(0, -2),
+                blurRadius: 8,
+                spreadRadius: 0,
+              ),
+            ],
+          ),
           child: SafeArea(
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: TextField(
-                    controller: widget.controller,
-                    focusNode: _focusNode,
-                    maxLines: null,
-                    textInputAction: TextInputAction.newline,
+                    controller: _controller,
+                    focusNode: focusNode,
                     decoration: InputDecoration(
                       hintText: "Type a message",
                       border: OutlineInputBorder(
@@ -79,11 +70,8 @@ class _ChatWindowTextFiledState extends State<ChatWindowTextFiled> {
                       ),
                       filled: true,
                       fillColor: Colors.grey.shade200,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
-                      ),
-                      prefixIcon: widget.isICon
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                      prefixIcon: isICon
                           ? IconButton(
                               icon: const Icon(Icons.attach_file),
                               onPressed: () {
@@ -98,11 +86,12 @@ class _ChatWindowTextFiledState extends State<ChatWindowTextFiled> {
                               },
                             ),
                     ),
+                    textInputAction: TextInputAction.send,
                   ),
                 ),
-                const SizedBox(width: 8),
+                ConstantWidgets.width20(context),
                 GestureDetector(
-                  onTap: widget.sendButton,
+                  onTap: sendButton,
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: const BoxDecoration(
@@ -112,16 +101,17 @@ class _ChatWindowTextFiledState extends State<ChatWindowTextFiled> {
                     child: BlocBuilder<ProgresserCubit, ProgresserState>(
                       builder: (context, state) {
                         if (state is MessageSendLoading) {
-                          return const SizedBox(
-                            height: 20,
-                            width: 20,
+                          return SizedBox(
+                            height: 17,
+                            width: 17,
                             child: CircularProgressIndicator(
+                              backgroundColor: AppPalette.hintColor,
                               color: AppPalette.whiteColor,
                               strokeWidth: 2.5,
                             ),
                           );
                         }
-                        return const Icon(Icons.send, color: AppPalette.whiteColor, size: 20);
+                        return Icon(Icons.send, color: AppPalette.whiteColor);
                       },
                     ),
                   ),
@@ -140,25 +130,25 @@ class _ChatWindowTextFiledState extends State<ChatWindowTextFiled> {
       maxHeight: MediaQuery.of(context).size.height * 0.4,
     ),
     child: EmojiPicker(
-      textEditingController: widget.controller,
+      textEditingController: _controller,
       onEmojiSelected: (category, emoji) {
-        final text = widget.controller.text;
-        final selection = widget.controller.selection;
+        final text = _controller.text;
+        final selection = _controller.selection;
         final newText = text.replaceRange(
           selection.start,
           selection.end,
           emoji.emoji,
         );
         final emojiLength = emoji.emoji.length;
-        widget.controller.text = newText;
-        widget.controller.selection = selection.copyWith(
+        _controller.text = newText;
+        _controller.selection = selection.copyWith(
           baseOffset: selection.start + emojiLength,
           extentOffset: selection.start + emojiLength,
         );
       },
       onBackspacePressed: () {
-        final text = widget.controller.text;
-        final selection = widget.controller.selection;
+        final text = _controller.text;
+        final selection = _controller.selection;
 
         if (selection.start == 0 && selection.end == 0) {
           return;
@@ -171,14 +161,14 @@ class _ChatWindowTextFiledState extends State<ChatWindowTextFiled> {
           final characters = text.characters;
           final before = characters.take(start - 1).toString();
           final after = characters.skip(end).toString();
-          widget.controller.text = before + after;
+          _controller.text = before + after;
           final newOffset = start - 1;
-          widget.controller.selection = TextSelection.fromPosition(TextPosition(offset: newOffset));
+          _controller.selection = TextSelection.fromPosition(TextPosition(offset: newOffset));
         } else {
           final before = text.substring(0, start);
           final after = text.substring(end);
-          widget.controller.text = before + after;
-          widget.controller.selection = TextSelection.fromPosition(TextPosition(offset: start));
+          _controller.text = before + after;
+          _controller.selection = TextSelection.fromPosition(TextPosition(offset: start));
         }
       },
       config: Config(

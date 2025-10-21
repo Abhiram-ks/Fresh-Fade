@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../domain/entity/barber_entity.dart';
 
 class BarberModel extends BarberEntity {

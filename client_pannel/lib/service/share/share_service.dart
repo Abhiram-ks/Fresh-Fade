@@ -2,6 +2,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 abstract class ShareService {
@@ -64,4 +67,41 @@ final class ShareServiceImpl implements ShareService {
       return ShareParams(text: text, title: title);
     }
   }
+
+
+
+
+class GeocodingHelper {
+  static Future<LatLng> addressToLatLng(String address) async {
+    try {
+      List<Location> locations = await locationFromAddress(address);
+      if (locations.isNotEmpty) {
+        final loc = locations.first;
+        return LatLng(loc.latitude, loc.longitude);
+      } else {
+        throw Exception('No coordinates found for the address');
+      }
+    } catch (e) {
+      throw Exception('Failed to convert address: $e');
+    }
+  }
+}
+
+class MapHelper {
+  static Future<void> openGoogleMaps({
+    required double sourceLat,
+    required double sourceLng,
+    required double destLat,
+    required double destLng,
+  }) async {
+    final googleUrl = Uri.parse('https://www.google.com/maps/dir/?api=1&origin=$sourceLat,$sourceLng&destination=$destLat,$destLng&travelmode=driving');
+
+    if (await canLaunchUrl(googleUrl)) {
+      await launchUrl(googleUrl, mode: LaunchMode.externalApplication);
+    } else {
+      throw Exception('Could not open Google Maps.');
+    }
+  }
+}
+
 

@@ -6,8 +6,9 @@ abstract class FetchAdminServiceState {}
 final class FetchAdminServiceInitial extends FetchAdminServiceState {}
 
 final class FetchAdminServiceLoading extends FetchAdminServiceState {}
+final class FetchAdminServiceEmpty extends FetchAdminServiceState {}
 final class FetchAdminServiceSuccess extends FetchAdminServiceState {
-  final List<Service> services;
+  final List<AdminServiceEntity> services;
   FetchAdminServiceSuccess({required this.services});
 }
 final class FetchAdminServiceError extends FetchAdminServiceState {

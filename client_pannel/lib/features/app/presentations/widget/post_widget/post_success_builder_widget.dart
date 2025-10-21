@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/constant/constant.dart';
 import '../../../../../core/images/app_images.dart';
+import '../../../../../core/routes/routes.dart';
 import '../../../../../service/formalt/time_date_formalt.dart';
 import '../../../data/model/post_with_barber_model.dart';
 import '../../state/cubit/like_post_cubit/like_post_cubit.dart';
@@ -97,23 +98,15 @@ RefreshIndicator postBlocSuccessStateBuilder({
               );
             },
             profilePage: () {
-              // if (data.barber.isblok) {
-              //   CustomeSnackBar.show(
-              //     context: context,
-              //     title: 'Account Suspended!',
-              //     description:
-              //         'This shop account has been suspended due to unauthorized activity detected.',
-              //     titleClr: AppPalette.redClr,
-              //   );
-              // } else {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) =>
-              //           DetailBarberScreen(barberId: data.barber.uid),
-              //     ),
-              //   );
-              // }
+              if (data.barber.isBloc) {
+                CustomSnackBar.show(context, message: 'This shop account has been suspended due to unauthorized activity detected!', backgroundColor: AppPalette.redColor, textAlign: TextAlign.center);
+              } else {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.detailBarber,
+                  arguments: data.barber.uid,
+                );
+              }
             },
             dateAndTime: '$formattedDate at $formattedStartTime',
           ),

@@ -21,7 +21,7 @@ class BarberRepositoryImpl implements BarberRepository {
     try {
       return remoteDatasource.streamBarber(barberId);
     } catch (e) {
-      throw Exception('Failed to stream barber: $e');
+      rethrow;
     }
   }
 }

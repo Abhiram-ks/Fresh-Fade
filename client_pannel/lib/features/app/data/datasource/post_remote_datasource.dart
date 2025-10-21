@@ -43,4 +43,62 @@ class PostRemoteDatasource {
       }).toList();
     });
   }
+
+
+  //Fetch barber individual pos
+  Stream<List<PostModel>> fetchBarberIndividualPosts(String barberId) {
+    try {
+      final postRef = firestore
+      .collection('posts')
+      .doc(barberId)
+      .collection('Post')
+      .orderBy('createdAt', descending: true);
+
+      return postRef.snapshots().map((snapshot) {
+        return snapshot.docs.map((doc) {
+          return PostModel.fromDocument(barberId, doc);
+        }).toList();
+      }).handleError((e) {
+        throw Exception(e.toString());
+      });
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+
+
+  /// fetch all posts
+  Stream<List<BarberModel>> streamChat({required String userId}) {
+       return firestore
+        .collection('chat')
+        .where('userId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .switchMap((querySnapshot) {
+      final barberIds = querySnapshot.docs
+          .map((doc) => doc.data()['barberId'] as String?)
+          .whereType<String>()
+          .toSet()
+          .toList();
+
+      if (barberIds.isEmpty) {
+        return Stream.value(<BarberModel>[]);
+      }
+
+
+      final barberStreams = barberIds
+          .map((id) => barber.streamBarber(id)
+              .handleError((e) {
+                throw Exception(e.toString());
+              }))
+          .toList();
+
+      return Rx.combineLatestList<BarberModel>(barberStreams);
+    });
+  }
+
+
+
+
 }

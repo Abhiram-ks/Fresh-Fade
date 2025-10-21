@@ -1,3 +1,4 @@
+import 'package:client_pannel/features/app/presentations/widget/search_widget/search_filter_widget.dart' show serchFilterActionItems;
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constant/constant.dart';
@@ -54,7 +55,7 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
           ConstantWidgets.hight10(context),
-         //serchFilterActionItems(screenWidth, context, screenHeight)
+         serchFilterActionItems(screenWidth, context, screenHeight)
         ],
       ),
     );

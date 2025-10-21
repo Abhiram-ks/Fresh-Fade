@@ -1,14 +1,10 @@
-import 'package:client_pannel/core/common/custom_chat_window_textfiled.dart' show EmojiPickerCubit;
+
 import 'package:client_pannel/core/routes/routes.dart';
 import 'package:client_pannel/core/themes/app_themes.dart';
-import 'package:client_pannel/features/app/data/datasource/barber_remote_datasource.dart';
-import 'package:client_pannel/features/app/data/datasource/rating_remote_datasource.dart';
-import 'package:client_pannel/features/app/data/repo/barber_repo_impl.dart';
-import 'package:client_pannel/features/app/domain/repo/barber_repo.dart';
-import 'package:client_pannel/features/app/domain/usecase/get_all_barbers_usecase.dart';
-import 'package:client_pannel/features/app/presentations/state/bloc/fetch_bloc/fetch_barber_bloc/fetch_barber_bloc_bloc.dart' show FetchAllbarberBloc, FetchAllBarbersRequested;
+import 'package:client_pannel/features/app/domain/usecase/get_location_usecase.dart';
+import 'package:client_pannel/features/app/presentations/state/bloc/location_bloc/location_bloc.dart';
+
 import 'package:client_pannel/firebase_options.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,13 +38,19 @@ class MyApp extends StatelessWidget {
         statusBarIconBrightness: Brightness.light,
         systemNavigationBarIconBrightness: Brightness.light,
       ),
-      child: MaterialApp(
+      child: MultiBlocProvider(
+        providers: [
+          
+        BlocProvider(create: (context) => LocationBloc(GetLocationUseCase())..add(GetCurrentLocationEvent())),
+        ],
+        child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Fresh Fade',
           theme: AppTheme.lightTheme,
           initialRoute: AppRoutes.splash,
           onGenerateRoute: AppRoutes.generateRoute,
         ),
+      ),
     );
   }
 }

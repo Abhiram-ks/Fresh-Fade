@@ -42,7 +42,6 @@ class _LocationMapPageState extends State<LocationMapPage>
       providers: [
         BlocProvider(create: (context) => SerchlocatonBloc()),
         BlocProvider(create: (context) => ProgresserCubit()),
-        BlocProvider(create: (context) => LocationBloc(GetLocationUseCase())..add(GetCurrentLocationEvent())),
       ],
       child: LayoutBuilder(
         builder: (context, constraints) {

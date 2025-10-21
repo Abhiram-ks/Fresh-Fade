@@ -2,7 +2,11 @@ import 'package:client_pannel/core/common/custom_cupertino_dialog.dart';
 import 'package:client_pannel/core/common/custom_snackbar.dart';
 import 'package:client_pannel/core/common/custom_testfiled.dart';
 import 'package:client_pannel/core/di/di.dart';
+import 'package:client_pannel/features/app/presentations/state/bloc/fetch_bloc/fetch_admin_service_bloc/fetch_admin_service_bloc.dart';
+import 'package:client_pannel/features/app/presentations/state/cubit/select_gender_cubit/select_gender_cubit.dart';
+import 'package:client_pannel/features/app/presentations/state/cubit/select_service_cubit/select_service_cubit.dart';
 import 'package:client_pannel/features/app/presentations/widget/search_widget/barber_list_builder.dart';
+import 'package:client_pannel/features/auth/presentations/state/cubit/progresser_cubit/progresser_cubit.dart';
 import 'package:client_pannel/service/voice/voice_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +18,7 @@ import '../../../../../core/debouncer/debouncer.dart';
 import '../../../../../core/themes/app_colors.dart';
 import '../../../../../core/validation/validator_helper.dart';
 import '../../state/bloc/fetch_bloc/fetch_barber_bloc/fetch_barber_bloc_bloc.dart';
+import '../../state/cubit/select_rating_cubit/select_rating_cubit.dart';
 import '../../state/cubit/voice_cubit/voice_cubit.dart';
 import '../../widget/search_widget/search_appbar.dart';
 
@@ -113,10 +118,12 @@ class _SearchScreenState extends State<SearchScreen>
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: _voiceSearchCubit),
-       // BlocProvider(create: (context) => GenderOptionCubit()),
-      //  BlocProvider(create: (context) => SelectServiceCubit()),
-     //   BlocProvider(create: (context) => RatingCubit()),
-      //  BlocProvider(create: (context) => AdiminServiceBloc(ServiceRepositoryImpl())..add(FetchServiceRequst())),
+       BlocProvider(create: (context) => GenderOptionCubit()),
+       BlocProvider(create: (context) => SelectServiceCubit()),
+       BlocProvider(create: (context) => RatingCubit()),
+       BlocProvider(create: (context) => sl<FetchAdminServiceBloc>()..add(FetchAdminServiceRequested())),
+
+       BlocProvider(create: (context) => ProgresserCubit()),
       ],
       child: BlocListener<VoiceSearchCubit, VoiceSearchState>(
         listener: (context, state) {

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/constant/constant.dart';
+import '../../../../../core/routes/routes.dart';
 import '../../../../../core/themes/app_colors.dart';
 import '../../state/bloc/fetch_bloc/fetch_barber_bloc/fetch_barber_bloc_bloc.dart';
 import 'barber_loading_screen.dart';
@@ -65,8 +66,8 @@ class _BarberListBuilderState extends State<BarberListBuilder> with  AutomaticKe
                   children: [
                        ListForBarbers(
                         ontap: () {
-                          // FocusScope.of(context).unfocus();
-                          // Navigator.push(context, MaterialPageRoute(builder: (context) => DetailBarberScreen(barberId: barber.uid,)));
+                          FocusScope.of(context).unfocus();
+                          Navigator.pushNamed(context, AppRoutes.detailBarber, arguments: barber.uid);
                         },
                         screenHeight: widget.screenHeight,
                         screenWidth: widget.screenWidth,

@@ -10,6 +10,9 @@
      
     <!-- Audio Permissions -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    
+    <!-- Phone Permissions -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
 
     <application
@@ -59,6 +62,11 @@
         <intent>
             <action android:name="android.intent.action.SEND"/>
             <data android:mimeType="*/*"/>
+        </intent>
+        <!-- For phone calls -->
+        <intent>
+            <action android:name="android.intent.action.DIAL"/>
+            <data android:scheme="tel"/>
         </intent>
     </queries>
 </manifest>
