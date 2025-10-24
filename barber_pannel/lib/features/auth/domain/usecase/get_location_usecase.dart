@@ -18,10 +18,11 @@ class GetLocationUseCase  {
     }
     }
     Position position = await Geolocator.getCurrentPosition(
-    locationSettings: LocationSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 10,
-    ),
+      locationSettings: AndroidSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10,
+        forceLocationManager: true,
+      ),
     );
     return LatLng(position.latitude, position.longitude);
   }

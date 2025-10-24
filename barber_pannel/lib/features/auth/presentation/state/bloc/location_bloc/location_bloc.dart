@@ -81,9 +81,10 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
         // Cancel any existing subscription
         await _positionStreamSubscription?.cancel();
         
-        const locationSettings = LocationSettings(
+        const locationSettings = AndroidSettings(
           accuracy: LocationAccuracy.high,
           distanceFilter: 10, // Update every 10 meters
+          forceLocationManager: true,
         );
 
         _positionStreamSubscription = Geolocator.getPositionStream(
@@ -99,7 +100,13 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
           },
         );
 
-        final currentPosition = await Geolocator.getCurrentPosition();
+        final currentPosition = await Geolocator.getCurrentPosition(
+          locationSettings: const AndroidSettings(
+            accuracy: LocationAccuracy.high,
+            distanceFilter: 10,
+            forceLocationManager: true,
+          ),
+        );
         emit(LocationLoaded(
           LatLng(currentPosition.latitude, currentPosition.longitude),
           isLiveTracking: true,
