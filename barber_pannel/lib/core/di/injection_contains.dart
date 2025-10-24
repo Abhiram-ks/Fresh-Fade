@@ -57,6 +57,7 @@ import 'package:barber_pannel/features/app/presentation/state/bloc/send_message_
 import 'package:barber_pannel/features/app/presentation/state/bloc/update_profile_bloc/update_profile_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/upload_post_bloc/upload_post_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/upload_service_data_bloc.dart/upload_service_data_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/lauch_service_bloc/lauch_service_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/cubit/last_message_cubit/last_message_cubit.dart';
 import 'package:barber_pannel/features/app/presentation/state/cubit/like_comments_cubit/like_comments_cubit.dart';
 import 'package:barber_pannel/features/app/presentation/state/cubit/like_post_cubit/like_post_cubit.dart';
@@ -416,6 +417,11 @@ Future<void> init() async {
       localDB: sl(),
       useCase: sl(),
     ),
+  );
+
+  // Launch service bloc (email launcher)
+  sl.registerFactory<LauchServiceBloc>(
+    () => LauchServiceBloc(),
   );
 
   // Image picker bloc
