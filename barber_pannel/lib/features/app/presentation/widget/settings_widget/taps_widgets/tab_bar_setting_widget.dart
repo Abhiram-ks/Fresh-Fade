@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../service/laucher/launcher_service.dart';
 import '../logout_state_handle.dart';
 
 class TabbarSettings extends StatelessWidget {
@@ -111,7 +112,9 @@ class TabbarSettings extends StatelessWidget {
                 screenHeight: screenHeight,
                 icon: CupertinoIcons.star,
                 title: 'Rate app',
-                onTap: () {}),
+                onTap: () {
+                  LauncerService.lauchingFunction(url: 'https://play.google.com/store/apps/details?id=com.freshfade.barberpannel&pcampaignid=web_share', name: 'Rate app', context: context);
+                }),
             Divider(
               color: AppPalette.hintColor,
             ),

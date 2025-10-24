@@ -52,6 +52,7 @@ import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fe
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_service_bloc/fetch_service_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_user_bloc/fetch_user_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/image_picker_bloc/image_picker_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/lauch_service_bloc/lauch_service_bloc.dart' show LauchServiceBloc;
 import 'package:barber_pannel/features/app/presentation/state/bloc/logout_bloc/logout_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/send_message_bloc/send_message_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/update_profile_bloc/update_profile_bloc.dart';
@@ -588,5 +589,10 @@ Future<void> init() async {
   // Share cubit
   sl.registerFactory<ShareCubit>(
     () => ShareCubit(shareService: sl()),
+  );
+
+  // Lauch service bloc
+  sl.registerFactory<LauchServiceBloc>(
+    () => LauchServiceBloc(),
   );
 }

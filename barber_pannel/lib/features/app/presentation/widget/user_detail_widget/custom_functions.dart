@@ -67,7 +67,7 @@ Padding customerFunctions({
                 LauchServiceAlertBoxEvent(
                   name: user.name,
                   email: user.email,
-                  subject: 'To connect with',
+                  subject: "To connect with ${user.name}",
                   body: 'I wanted to follow up regarding your recent booking.',
                 ),
               );
@@ -75,40 +75,64 @@ Padding customerFunctions({
             text: 'Email',
           ),
         ),
-        detailsPageActions(
-          context: context,
-          colors: AppPalette.buttonColor,
-          screenWidth: screenWidth,
-          icon: CupertinoIcons.calendar,
-          onTap: () {},
-          text: 'Bookings',
+        BlocListener<LauchServiceBloc, LauchServiceState>(
+          listener: (context, state) {
+            handleEmailLaucher(context, state);
+          },
+          child: detailsPageActions(
+            context: context,
+            colors: AppPalette.buttonColor,
+            screenWidth: screenWidth,
+            icon: CupertinoIcons.calendar,
+            onTap: () {
+              context.read<LauchServiceBloc>().add(LauchServiceAlertBoxEvent(
+                name: user.name,
+                email: 'freshfade.growblic@gmail.com',
+                subject: "To connect with Fresh Fade : Business",
+                body: 'I would like to get information regarding the payment gateway integration for the application. I understand there may be a server-related issue, and I kindly request clarification on this matter for the application "Fresh Fade: Business" and its revenue management features.',
+              ));
+            },
+            text: 'Bookings',
+          ),
         ),
       ],
     ),
   );
 }
 
-
-
 void handleEmailLaucher(BuildContext context, LauchServiceState state) {
   if (state is LauchServiceAlertBox) {
-   CustomCupertinoDialog.show(
-    context: context,
-     title: 'Please confirm the session', 
-     message: 'Are you sure you want to launch the email? Yes? confirm else declired that activity', 
-     onTap: () {
-      context.read<LauchServiceBloc>().add(LauchServiceConfirmEvent());
-     }, 
-     firstButtonColor: AppPalette.buttonColor,
-     firstButtonText: 'Confirm', 
-     secondButtonText: 'Decline',
-     secondButtonColor: AppPalette.redColor,
-     );
-  }else if (state is LauchServiceAlertBoxSuccess) {
-    CustomSnackBar.show(context, message: 'Email launched successfully', textAlign: TextAlign.center);
+    CustomCupertinoDialog.show(
+      context: context,
+      title: 'Please confirm the session',
+      message:
+          'Are you sure you want to launch the email? Yes? confirm else declired that activity',
+      onTap: () {
+        context.read<LauchServiceBloc>().add(LauchServiceConfirmEvent());
+      },
+      firstButtonColor: AppPalette.buttonColor,
+      firstButtonText: 'Confirm',
+      secondButtonText: 'Decline',
+      secondButtonColor: AppPalette.blackColor,
+    );
+  } else if (state is LauchServiceAlertBoxSuccess) {
+    CustomSnackBar.show(
+      context,
+      message: 'Email launched successfully',
+      textAlign: TextAlign.center,
+    );
   } else if (state is LauchServiceAlertBoxError) {
-    CustomSnackBar.show(context, message: state.error, textAlign: TextAlign.center, backgroundColor: AppPalette.redColor);
+    CustomSnackBar.show(
+      context,
+      message: state.error,
+      textAlign: TextAlign.center,
+      backgroundColor: AppPalette.redColor,
+    );
   } else if (state is LauchServiceLoading) {
-    CustomSnackBar.show(context, message: 'Email launching in progress.', textAlign: TextAlign.center);
+    CustomSnackBar.show(
+      context,
+      message: 'Email launching in progress.',
+      textAlign: TextAlign.center,
+    );
   }
 }
