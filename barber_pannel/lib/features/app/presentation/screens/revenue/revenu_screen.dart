@@ -1,6 +1,9 @@
 import 'package:barber_pannel/core/common/custom_appbar2.dart';
+import 'package:barber_pannel/core/routes/routes.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_barber_service_bloc/fetch_barber_service_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constant/constant.dart';
 import '../../../../../core/themes/app_colors.dart';
 
@@ -232,41 +235,42 @@ class RevenuePortionGridWidget extends StatelessWidget {
                   iconColor: const Color.fromARGB(255, 118, 171, 215),
                 )
           ),
-          // InkWell(
-          //   onTap: () => Navigator.pushNamed(  context, AppRoutes.serviceManageScreen),
-          //   child: BlocBuilder<FetchBarberServiceBloc,FetchBarberServiceState>(
-          //     builder: (context, state) {
-          //       String serviceCount = '0';
-          //       if (state is FetchBarberServiceLoading) {
-          //         serviceCount = 'Loading...';
-          //       } else if (state is FetchBarberServiceSuccess) {
-          //         serviceCount = state.services.length.toString();
-          //       } else if (state is FetchBarberServiceEmpty) {
-          //         serviceCount = 'No services found';
-          //       } else if (state is FetchBarberServiceError) {
-          //         serviceCount = 'Error: Try Again';
-          //       }
-          //       return RevenueDetailsContainer(
-          //         gradient: const LinearGradient(
-          //           colors: [
-          //              Color(0xFF444444), 
-          //              Color(0xFF888888), 
-          //           ],
-          //           begin: Alignment.topLeft,
-          //           end: Alignment.bottomRight,
-          //         ),
-          //         screenHeight: MediaQuery.of(context).size.height,
-          //         screenWidth: MediaQuery.of(context).size.width,
-          //         title: 'Total Services',
-          //         description:
-          //             "The total count of every service you’ve provided",
-          //         icon: CupertinoIcons.wrench_fill,
-          //         salesText: serviceCount,
-          //         iconColor: const Color.fromARGB(255, 118, 118, 118),
-          //       );
-          //     },
-          //   ),
-          // ),
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.serviceManage);
+            },
+            child: BlocBuilder<FetchBarberServiceBloc,FetchBarberServiceState>(
+              builder: (context, state) {
+                String serviceCount = '0';
+                if (state is FetchBarberServiceLoading) {
+                  serviceCount = 'Loading...';
+                } else if (state is FetchBarberServiceLoaded) {
+                  serviceCount = state.services.length.toString();
+                } else if (state is FetchBarberServiceEmpty) {
+                  serviceCount = 'No services found';
+                } else if (state is FetchBarberServiceError) {
+                  serviceCount = 'Error: Try Again';
+                }
+                return RevenueDetailsContainer(
+                  gradient: const LinearGradient(
+                    colors: [
+                       Color(0xFF444444), 
+                       Color(0xFF888888), 
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  screenHeight: MediaQuery.of(context).size.height,
+                  screenWidth: MediaQuery.of(context).size.width,
+                  title: 'Total Services',
+                  description: "The total count of every service you’ve provided",
+                  icon: CupertinoIcons.wrench_fill,
+                  salesText: serviceCount,
+                  iconColor: const Color.fromARGB(255, 118, 118, 118),
+                );
+              },
+            ),
+          ),
           InkWell(
             onTap: () {},
             child: RevenueDetailsContainer(

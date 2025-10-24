@@ -8,6 +8,7 @@ import 'package:admin_pannel/features/presentation/state/cubit/progresser_cubit/
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/common/custom_dialogbox.dart';
 import '../../../../core/constant/constant.dart';
 import '../../state/bloc/fetch_barber_banner_bloc/fetch_barber_banner_bloc.dart';
@@ -17,6 +18,7 @@ import '../../state/bloc/image_picker_bloc/image_picker_bloc.dart';
 import '../../state/bloc/image_upload_bloc/image_upload_bloc.dart';
 import '../../state/cubit/radio_button_cubit/radio_button_cubit.dart';
 import '../../widgets/promotions_widget/image_picker_widget.dart';
+import 'service.dart';
 
 class PromotionScreen extends StatelessWidget {
   final double screenWidth;
@@ -79,29 +81,267 @@ class BannerManagement extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal:
-                screenWidth > 600 ? screenWidth * .2 : screenWidth * 0.05,
-          ),
-          child: RefreshIndicator(
-            onRefresh: () => _refreshContent(context),
-            displacement: 50.0,
-            backgroundColor: AppPalette.blueColor,
-            triggerMode: RefreshIndicatorTriggerMode.onEdge,
-            color: AppPalette.whiteColor,
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: ImagePickAndUploadWidget(
+        // Check if it's a large screen (web/tablet)
+        bool isLargeScreen = screenWidth > 900;
+        
+        return isLargeScreen
+            ? WebResponsivePromotionLayout(
                 screenWidth: screenWidth,
                 screenHeight: screenHeight,
-              ),
-            ),
-          ),
-        );
+                onRefresh: () => _refreshContent(context),
+              )
+            : MobilePromotionLayout(
+                screenWidth: screenWidth,
+                screenHeight: screenHeight,
+                onRefresh: () => _refreshContent(context),
+              );
       },
     );
   }
+}
+
+// Mobile Layout (unchanged)
+class MobilePromotionLayout extends StatelessWidget {
+  final double screenWidth;
+  final double screenHeight;
+  final Future<void> Function() onRefresh;
+
+  const MobilePromotionLayout({
+    super.key,
+    required this.screenWidth,
+    required this.screenHeight,
+    required this.onRefresh,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: screenWidth > 600 ? screenWidth * .2 : screenWidth * 0.05,
+      ),
+      child: RefreshIndicator(
+        onRefresh: onRefresh,
+        displacement: 50.0,
+        backgroundColor: AppPalette.blueColor,
+        triggerMode: RefreshIndicatorTriggerMode.onEdge,
+        color: AppPalette.whiteColor,
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: ImagePickAndUploadWidget(
+            screenWidth: screenWidth,
+            screenHeight: screenHeight,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Web Responsive Layout for Large Screens
+class WebResponsivePromotionLayout extends StatelessWidget {
+  final double screenWidth;
+  final double screenHeight;
+  final Future<void> Function() onRefresh;
+
+  const WebResponsivePromotionLayout({
+    super.key,
+    required this.screenWidth,
+    required this.screenHeight,
+    required this.onRefresh,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color.fromARGB(255, 245, 245, 245),
+      child: Center(
+        child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          physics: BouncingScrollPhysics(),
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: 1200,
+              minWidth: 800,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Left Sidebar - Promotion Management Info
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    margin: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(30),
+                    decoration: BoxDecoration(
+                      color: AppPalette.whiteColor,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppPalette.blackColor.withValues(alpha: 0.05),
+                          blurRadius: 20,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Header
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: AppPalette.blueColor.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Icon(
+                                CupertinoIcons.photo_on_rectangle,
+                                color: AppPalette.blueColor,
+                                size: 24,
+                              ),
+                            ),
+                            ConstantWidgets.width20(context),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Banner Management',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppPalette.blackColor,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Manage promotional banners',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      color: AppPalette.blackColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        ConstantWidgets.hight30(context),
+                        
+                        // Info Cards
+                        buildInfoCard(
+                          icon: CupertinoIcons.cloud_upload,
+                          title: 'Upload Banners',
+                          description: 'Add promotional images for clients and barbers',
+                          color: AppPalette.greenColor,
+                        ),
+                        ConstantWidgets.hight20(context),
+                        
+                        buildInfoCard(
+                          icon: CupertinoIcons.photo,
+                          title: 'View Banners',
+                          description: 'See all uploaded promotional banners',
+                          color: AppPalette.blueColor,
+                        ),
+                        ConstantWidgets.hight20(context),
+                        
+                        buildInfoCard(
+                          icon: CupertinoIcons.delete,
+                          title: 'Delete Banners',
+                          description: 'Remove outdated promotional content',
+                          color: AppPalette.redColor,
+                        ),
+                        ConstantWidgets.hight20(context),
+                        
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: AppPalette.blueColor.withValues(alpha: 0.05),
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: AppPalette.blueColor.withValues(alpha: 0.1),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    CupertinoIcons.lightbulb,
+                                    color: AppPalette.blueColor,
+                                    size: 20,
+                                  ),
+                                  Text(
+                                    'Pro Tip',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppPalette.blueColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              ConstantWidgets.hight10(context),
+                              Text(
+                                'Use high-quality images for better engagement. Recommended size: 1200x600px for optimal display.',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  color: AppPalette.greyColor,
+                                  height: 1.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                
+                // Right Side - Banner Upload and Management
+                Expanded(
+                  flex: 4,
+                  child: Container(
+                    margin: const EdgeInsets.all(20),
+                    child: RefreshIndicator(
+                      onRefresh: onRefresh,
+                      displacement: 50.0,
+                      backgroundColor: AppPalette.blueColor,
+                      triggerMode: RefreshIndicatorTriggerMode.onEdge,
+                      color: AppPalette.whiteColor,
+                      child: SingleChildScrollView(
+                        physics: BouncingScrollPhysics(),
+                        child: Container(
+                          padding: const EdgeInsets.all(30),
+                          decoration: BoxDecoration(
+                            color: AppPalette.whiteColor,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppPalette.blackColor.withValues(alpha: 0.05),
+                                blurRadius: 20,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: ImagePickAndUploadWidget(
+                            screenWidth: screenWidth,
+                            screenHeight: screenHeight,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
 }
 
 class ImagePickAndUploadWidget extends StatelessWidget {
@@ -511,16 +751,48 @@ class _BannerBuilderWidgetState extends State<BannerBuilderWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // Calculate responsive dimensions
+    bool isLargeScreen = widget.screenWidth > 900;
+    double bannerHeight = isLargeScreen ? 180 : widget.screenHeight * 0.25;
+    double bannerWidth = isLargeScreen ? 300 : widget.screenWidth * 0.87;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ConstantWidgets.hight20(context),
-        Text(
-          widget.title,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppPalette.blueColor),
+        Row(
+          children: [
+            Text(
+              widget.title,
+              style: GoogleFonts.poppins(
+                fontSize: isLargeScreen ? 18 : 16,
+                fontWeight: FontWeight.bold,
+                color: AppPalette.blueColor,
+              ),
+            ),
+            if (isLargeScreen) ...[
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppPalette.blueColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '${widget.imageWidgets.length} banners',
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    color: AppPalette.blueColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ],
         ),
+        ConstantWidgets.hight10(context),
         SizedBox(
-          height: widget.screenHeight * 0.25,
+          height: bannerHeight,
           width: widget.screenWidth,
           child: Stack(
             children: [
@@ -532,85 +804,201 @@ class _BannerBuilderWidgetState extends State<BannerBuilderWidget> {
                   itemCount: widget.imageWidgets.length,
                   itemBuilder: (context, imageIndex) {
                     final imageUrl = widget.imageWidgets[imageIndex];
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(10),
-                      onLongPress: () {
-                        widget.onDoubleTap(imageUrl, widget.number, imageIndex);
-                      },
-                      child: Container(
-                        height: widget.screenHeight * 0.25,
-                        width: widget.screenWidth * 0.87,
-                        decoration: BoxDecoration(
-                          color: AppPalette.trasprentColor,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        margin: const EdgeInsets.symmetric(horizontal: 2.0),
-                        child: Image.network(
-                          imageUrl,
-                          fit: BoxFit.contain,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                color: AppPalette.blueColor,
-                                value:
-                                    loadingProgress.expectedTotalBytes != null
-                                        ? loadingProgress
-                                                .cumulativeBytesLoaded /
-                                            (loadingProgress
-                                                    .expectedTotalBytes ??
-                                                1)
-                                        : null,
-                              ),
-                            );
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    CupertinoIcons.photo,
-                                    color: AppPalette.greyColor,
-                                    size: 50,
-                                  ),
-                                  Text('Oops! Image load failed...'),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                    return _buildBannerItem(
+                      imageUrl: imageUrl,
+                      imageIndex: imageIndex,
+                      bannerHeight: bannerHeight,
+                      bannerWidth: bannerWidth,
+                      isLargeScreen: isLargeScreen,
                     );
                   },
                 ),
               ),
-              // Left arrow
-              Positioned(
-                left: 0,
-                top: 0,
-                bottom: 0,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios, size: 28),
-                  color: Colors.black54,
-                  onPressed: scrollToPrevious,
+              // Navigation arrows
+              if (widget.imageWidgets.length > 1) ...[
+                // Left arrow
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [
+                          AppPalette.whiteColor.withValues(alpha: 0.8),
+                          AppPalette.whiteColor.withValues(alpha: 0.0),
+                        ],
+                      ),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        size: isLargeScreen ? 32 : 28,
+                        color: AppPalette.blueColor,
+                      ),
+                      onPressed: scrollToPrevious,
+                    ),
+                  ),
                 ),
-              ),
-              Positioned(
-                right: 0,
-                top: 0,
-                bottom: 0,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios, size: 28),
-                  color: Colors.black54,
-                  onPressed: scrollToNext,
+                // Right arrow
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.centerRight,
+                        end: Alignment.centerLeft,
+                        colors: [
+                          AppPalette.whiteColor.withValues(alpha: 0.8),
+                          AppPalette.whiteColor.withValues(alpha: 0.0),
+                        ],
+                      ),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_forward_ios,
+                        size: isLargeScreen ? 32 : 28,
+                        color: AppPalette.blueColor,
+                      ),
+                      onPressed: scrollToNext,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildBannerItem({
+    required String imageUrl,
+    required int imageIndex,
+    required double bannerHeight,
+    required double bannerWidth,
+    required bool isLargeScreen,
+  }) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(15),
+      onLongPress: () {
+        widget.onDoubleTap(imageUrl, widget.number, imageIndex);
+      },
+      child: Container(
+        height: bannerHeight,
+        width: bannerWidth,
+        margin: const EdgeInsets.symmetric(horizontal: 4.0),
+        decoration: BoxDecoration(
+          color: AppPalette.whiteColor,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: isLargeScreen ? [
+            BoxShadow(
+              color: AppPalette.blackColor.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ] : null,
+        ),
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.network(
+                imageUrl,
+                width: bannerWidth,
+                height: bannerHeight,
+                fit: isLargeScreen ? BoxFit.contain : BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return _buildBannerLoading(loadingProgress, isLargeScreen);
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return _buildBannerError(isLargeScreen);
+                },
+              ),
+            ),
+            // Overlay for delete hint
+            if (isLargeScreen)
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: AppPalette.redColor.withValues(alpha: 0.8),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    'Long press to delete',
+                    style: GoogleFonts.poppins(
+                      fontSize: 8,
+                      color: AppPalette.whiteColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBannerLoading(ImageChunkEvent loadingProgress, bool isLargeScreen) {
+    return Container(
+      color: AppPalette.whiteColor,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(
+              color: AppPalette.blueColor,
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      (loadingProgress.expectedTotalBytes ?? 1)
+                  : null,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Loading...',
+              style: GoogleFonts.poppins(
+                fontSize: isLargeScreen ? 12 : 10,
+                color: AppPalette.greyColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBannerError(bool isLargeScreen) {
+    return Container(
+      color: AppPalette.whiteColor,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              CupertinoIcons.photo,
+              color: AppPalette.greyColor,
+              size: isLargeScreen ? 40 : 30,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Failed to load',
+              style: GoogleFonts.poppins(
+                fontSize: isLargeScreen ? 12 : 10,
+                color: AppPalette.greyColor,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

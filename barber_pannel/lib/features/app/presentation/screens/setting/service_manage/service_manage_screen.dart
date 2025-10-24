@@ -6,7 +6,7 @@ import 'package:barber_pannel/core/common/custom_snackbar.dart';
 import 'package:barber_pannel/core/constant/constant.dart';
 import 'package:barber_pannel/core/di/injection_contains.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/barber_service_modification_bloc/barber_service_modification_bloc.dart';
-import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_barber_service_bloc/fetch_barber_service_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_barber_service_bloc/fetch_barber_service_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/cubit/service_edit_cubit/service_edit_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +31,6 @@ class ServiceManageScreen extends StatelessWidget {
       ],
       child: LayoutBuilder(
         builder: (context, constraints) {
-          double screenHeight = constraints.maxHeight;
           double screenWidth = constraints.maxWidth;
 
           return SafeArea(
@@ -202,6 +201,7 @@ class _BarberServiceBuilderWIdgetState extends State<BarberServiceBuilderWIdget>
     );
   }
 }
+
 
 
 class ServiceManagementFiled extends StatefulWidget {

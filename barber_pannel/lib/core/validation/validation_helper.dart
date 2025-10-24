@@ -1,5 +1,9 @@
 class ValidatorHelper {
 
+  static String? serching(String? text){
+    return null;
+  }
+
   static String? validateEmailId(String? email){
     if(email == null || email.isEmpty){
        return 'Please enter email';

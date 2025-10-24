@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
       builder: (context, constraints) {
         final screenWidth = constraints.maxWidth;
         final screenHeight = constraints.maxHeight;
-
+        
         return Scaffold(
           appBar: CustomAppBar2(
             isTitle: true,
@@ -61,8 +61,7 @@ class HomePageCustomScrollViewWidget extends StatefulWidget {
   final double screenWidth;
 
   @override
-  State<HomePageCustomScrollViewWidget> createState() =>
-      _HomePageCustomScrollViewWidgetState();
+  State<HomePageCustomScrollViewWidget> createState() => _HomePageCustomScrollViewWidgetState();
 }
 
 class _HomePageCustomScrollViewWidgetState

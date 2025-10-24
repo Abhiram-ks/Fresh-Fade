@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 import 'dart:io' as io;
 import 'package:barber_pannel/features/auth/domain/entity/barber_entity.dart';
 import 'package:barber_pannel/features/app/domain/entity/barber_service_entity.dart';
@@ -10,7 +10,6 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class BarberPdfService {
-  /// Generates a professional and minimalistic PDF for barber shop profile
   static Future<bool> generateBarberProfilePdf({
     required BarberEntity barber,
     List<BarberServiceEntity>? services,

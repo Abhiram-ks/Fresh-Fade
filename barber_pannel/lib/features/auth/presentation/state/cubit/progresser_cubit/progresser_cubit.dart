@@ -12,4 +12,12 @@ class ProgresserCubit extends Cubit<ProgresserState> {
   void stopLoading() {
     emit(ButtonprogressStop());
   }
+//! send message states 
+    void sendButtonStart() {
+    emit(MessageSendLoading());
+  }
+
+  void sendButtonStop() {
+    emit(MessageSendSuccess());
+  }
 }

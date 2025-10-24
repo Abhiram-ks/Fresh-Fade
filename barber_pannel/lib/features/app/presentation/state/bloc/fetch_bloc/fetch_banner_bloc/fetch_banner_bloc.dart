@@ -20,7 +20,6 @@ class FetchBannersBloc extends Bloc<FetchBannerEvent, FetchBannerState> {
     Emitter<FetchBannerState> emit,
   ) async {
     emit(FetchBannersLoading());
-    log('FetchBannersRequest');
     try {
       await emit.forEach<BannerEntity>(
         useCase(),
@@ -28,7 +27,6 @@ class FetchBannersBloc extends Bloc<FetchBannerEvent, FetchBannerState> {
           if (banner.bannerImage.isEmpty) {
             return FetchBannersEmpty();
           } else {
-            log('FetchBannersLoaded');
             return FetchBannersLoaded(banner);
           }
         },

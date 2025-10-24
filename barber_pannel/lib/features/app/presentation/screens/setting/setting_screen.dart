@@ -3,6 +3,7 @@ import 'package:barber_pannel/core/di/injection_contains.dart';
 import 'package:barber_pannel/core/images/app_image.dart';
 import 'package:barber_pannel/core/routes/routes.dart';
 import 'package:barber_pannel/features/auth/domain/entity/barber_entity.dart';
+import 'package:barber_pannel/features/auth/presentation/state/cubit/delete_post_cubit/delete_post_cubit.dart';
 import 'package:barber_pannel/features/auth/presentation/state/cubit/progresser_cubit/progresser_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -129,6 +130,7 @@ class _ProfileScrollViewState extends State<ProfileScrollView>
         BlocProvider(create: (context) => sl<ImagePickerBloc>()),
         BlocProvider(create: (context) => ProgresserCubit()),
         BlocProvider(create: (context) => sl<UploadPostBloc>()),
+        BlocProvider(create: (context) => sl<DeletePostCubit>()),
       ],
       child: CustomScrollView(
         controller: _scrollController,
@@ -452,7 +454,7 @@ Column detailsPageActions({
         context: context,
         borderRadius: 15,
         padding: screenWidth > 600 ? 30 : screenWidth * .05,
-        fillColor: Color.fromARGB(255, 248, 239, 216),
+        fillColor: Color.fromARGB(255, 237, 216, 248),
         onTap: onTap,
       ),
       Text(text),

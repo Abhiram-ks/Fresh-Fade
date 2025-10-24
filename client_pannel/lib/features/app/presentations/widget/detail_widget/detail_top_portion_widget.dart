@@ -139,21 +139,6 @@ class DetailTopPortionWidget extends StatelessWidget {
                         );
                       }
                     }
-                    // final credentials =
-                    //     await SecureStorageService.getUserCredentials();
-                    // final String? userId = credentials['userId'];
-                    // if (userId == null) return;
-
-                    // Navigator.push(
-                    //   // ignore: use_build_context_synchronously
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => IndividualChatScreen(
-                    //       barberId: barber.uid,
-                    //       userId: userId,
-                    //     ),
-                    //   ),
-                    // );
                   },
                   text: 'Message',
                 ),

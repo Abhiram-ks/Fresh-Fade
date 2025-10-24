@@ -9,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'core/di/di.dart';
 import 'service/cloudinary/cloudinary_config.dart';
@@ -19,11 +20,27 @@ void main() async {
   await init();
   CloudinaryConfig.initialize();
 
+  // Request location permission at app startup
+  await _requestLocationPermission();
+
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
   runApp(const MyApp());
+}
+
+
+Future<void> _requestLocationPermission() async {
+  try {
+    PermissionStatus status = await Permission.location.status;
+
+    if (status.isDenied) {
+      status = await Permission.location.request();
+    }
+  } catch (e) {
+    debugPrint('Error requesting location permission: $e');
+  }
 }
 
 class MyApp extends StatelessWidget {

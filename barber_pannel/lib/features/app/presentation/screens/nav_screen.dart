@@ -4,11 +4,12 @@ import 'package:barber_pannel/core/themes/app_colors.dart';
 import 'package:barber_pannel/features/app/presentation/screens/setting/setting_screen.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_banner_bloc/fetch_banner_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_barber_bloc/fetch_barber_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_barber_service_bloc/fetch_barber_service_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_chat_user_lebel_bloc/fetch_chat_user_lebel_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_post_bloc/fetch_posts_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/cubit/nav_cubit/nav_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'chat/chat_screen.dart';
@@ -44,19 +45,19 @@ class BottomNavigationControllers extends StatelessWidget {
         BlocProvider(
           create: (context) => sl<FetchPostsBloc>()..add(FetchPostsRequest()),
         ),
+        BlocProvider(
+          create: (context) => sl<FetchChatUserlebelBloc>()..add(FetchChatLebelUserRequst()),
+        ),
+        BlocProvider(
+          create: (context) => sl<FetchBarberServiceBloc>()..add(FetchBarberServiceRequest()),
+        ),
       ],
       child: Theme(
         data: Theme.of(context).copyWith(
           splashColor: AppPalette.whiteColor.withAlpha((0.3 * 225).round()),
           highlightColor: AppPalette.buttonColor.withAlpha((0.2 * 255).round()),
         ),
-        child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle(
-            statusBarColor: AppPalette.whiteColor,
-            statusBarIconBrightness: Brightness.dark,
-          ),
-
-          child: SafeArea(
+        child: SafeArea(
             child: Scaffold(
               body: BlocListener<FetchBarberBloc, FetchBarberState>(
                 listener: (context, state) {
@@ -168,7 +169,6 @@ class BottomNavigationControllers extends StatelessWidget {
               ),
             ),
           ),
-        ),
       ),
     );
   }

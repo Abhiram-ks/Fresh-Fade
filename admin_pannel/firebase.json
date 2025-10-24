@@ -1,1 +1,39 @@
-{"firestore":{"database":"(default)","location":"asia-south1","rules":"firestore.rules","indexes":"firestore.indexes.json"},"flutter":{"platforms":{"android":{"default":{"projectId":"fresh-fade-booking","appId":"1:613993761425:android:a3bbdc00993d71eda6cd30","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"fresh-fade-booking","configurations":{"android":"1:613993761425:android:a3bbdc00993d71eda6cd30","ios":"1:613993761425:ios:4f3e7b0e49761917a6cd30","macos":"1:613993761425:ios:4f3e7b0e49761917a6cd30","web":"1:613993761425:web:9df1d25e8c10a088a6cd30"}}}}}}
+{
+  "firestore": {
+    "database": "(default)",
+    "location": "asia-south1",
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "fresh-fade-booking",
+          "appId": "1:613993761425:android:a3bbdc00993d71eda6cd30",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "fresh-fade-booking",
+          "configurations": {
+            "android": "1:613993761425:android:a3bbdc00993d71eda6cd30",
+            "ios": "1:613993761425:ios:4f3e7b0e49761917a6cd30",
+            "macos": "1:613993761425:ios:4f3e7b0e49761917a6cd30",
+            "web": "1:613993761425:web:9df1d25e8c10a088a6cd30"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "site": "fresh-fade-admin",
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

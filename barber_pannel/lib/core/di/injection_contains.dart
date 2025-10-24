@@ -1,25 +1,40 @@
 import 'package:barber_pannel/features/app/data/datasource/banner_remote_datasource.dart';
 import 'package:barber_pannel/features/app/data/datasource/barber_remote_datasource.dart';
 import 'package:barber_pannel/features/app/data/datasource/barber_service_datasource.dart';
+import 'package:barber_pannel/features/app/data/datasource/chat_remote_datasource.dart';
+import 'package:barber_pannel/features/app/data/datasource/comments_remote_datasource.dart';
 import 'package:barber_pannel/features/app/data/datasource/post_remote_datasource.dart';
 import 'package:barber_pannel/features/app/data/datasource/service_remote_datasource.dart';
+import 'package:barber_pannel/features/app/data/datasource/user_remote_datasource.dart';
 import 'package:barber_pannel/features/app/data/repo/banner_repository_impl.dart';
 import 'package:barber_pannel/features/app/data/repo/barber_repository_impl.dart';
 import 'package:barber_pannel/features/app/data/repo/barber_service_repository_impl.dart';
+import 'package:barber_pannel/features/app/data/repo/chat_repo_impl.dart';
+import 'package:barber_pannel/features/app/data/repo/comments_repository_impl.dart';
 import 'package:barber_pannel/features/app/data/repo/image_picker_repo_impl.dart';
 import 'package:barber_pannel/features/app/data/repo/post_repository_impl.dart';
 import 'package:barber_pannel/features/app/data/repo/service_repository_impl.dart';
+import 'package:barber_pannel/features/app/data/repo/barber_repo_impl.dart';
 import 'package:barber_pannel/features/app/domain/repo/banner_repository.dart';
 import 'package:barber_pannel/features/app/domain/repo/barber_repository.dart';
 import 'package:barber_pannel/features/app/domain/repo/barber_service_repository.dart';
+import 'package:barber_pannel/features/app/domain/repo/chat_repository.dart';
+import 'package:barber_pannel/features/app/domain/repo/commets_repository.dart';
 import 'package:barber_pannel/features/app/domain/repo/image_picker_repo.dart';
 import 'package:barber_pannel/features/app/domain/repo/post_repository.dart';
 import 'package:barber_pannel/features/app/domain/repo/service_repository.dart';
+import 'package:barber_pannel/features/app/domain/repo/user_repo.dart';
+import 'package:barber_pannel/features/app/domain/usecase/chat_labels_usecase.dart';
+import 'package:barber_pannel/features/app/domain/usecase/delete_post_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/get_banner_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/get_barber_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/get_barber_services_usecase.dart';
+import 'package:barber_pannel/features/app/domain/usecase/get_chat_users_usecase.dart';
+import 'package:barber_pannel/features/app/domain/usecase/get_comments_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/get_posts_usecase.dart';
+import 'package:barber_pannel/features/app/domain/usecase/get_post_with_barber_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/get_services_usecase.dart';
+import 'package:barber_pannel/features/app/domain/usecase/send_message_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/update_barber_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/update_barber_newdata_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/updated_barber_service_usecase.dart';
@@ -27,16 +42,34 @@ import 'package:barber_pannel/features/app/domain/usecase/upload_barber_service_
 import 'package:barber_pannel/features/app/domain/usecase/upload_post_usecase.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/barber_/barber_service_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/barber_service_modification_bloc/barber_service_modification_bloc.dart';
-import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_barber_service_bloc/fetch_barber_service_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_barber_service_bloc/fetch_barber_service_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_banner_bloc/fetch_banner_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_barber_bloc/fetch_barber_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_chat_user_lebel_bloc/fetch_chat_user_lebel_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_comment_bloc/fetch_comment_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_post_bloc/fetch_posts_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_post_with_barber_bloc/fetch_post_with_barber_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_service_bloc/fetch_service_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_user_bloc/fetch_user_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/image_picker_bloc/image_picker_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/logout_bloc/logout_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/send_message_bloc/send_message_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/update_profile_bloc/update_profile_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/upload_post_bloc/upload_post_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/upload_service_data_bloc.dart/upload_service_data_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/cubit/last_message_cubit/last_message_cubit.dart';
+import 'package:barber_pannel/features/app/presentation/state/cubit/like_comments_cubit/like_comments_cubit.dart';
+import 'package:barber_pannel/features/app/presentation/state/cubit/like_post_cubit/like_post_cubit.dart';
+import 'package:barber_pannel/features/app/presentation/state/cubit/message_badge_cubit/message_badge_cubit.dart';
+import 'package:barber_pannel/features/app/presentation/state/cubit/request_chat_statuc_cubit/request_chat_status_cubit.dart';
+import 'package:barber_pannel/features/app/presentation/state/cubit/nav_cubit/nav_cubit.dart';
+import 'package:barber_pannel/features/app/presentation/state/cubit/setting_tab_cubit/setting_tab_cubit.dart';
+import 'package:barber_pannel/features/app/presentation/state/cubit/post_like_animation_cubit/post_like_animation_cubit.dart';
+import 'package:barber_pannel/features/app/presentation/state/cubit/share_cubit/share_cubit.dart';
+import 'package:barber_pannel/service/share/share_service.dart';
+import 'package:barber_pannel/features/auth/presentation/state/cubit/delete_post_cubit/delete_post_cubit.dart';
+import 'package:barber_pannel/features/auth/presentation/state/cubit/progresser_cubit/progresser_cubit.dart';
+import 'package:barber_pannel/core/common/custom_chat_textfiled.dart';
 import 'package:barber_pannel/service/cloudinary/cloudinary_service.dart';
 import 'package:barber_pannel/features/auth/data/datasource/auth_local_datasouce.dart';
 import 'package:barber_pannel/features/auth/data/datasource/auth_login_remotedatasoucre.dart';
@@ -123,7 +156,8 @@ Future<void> init() async {
   // Post remote data source
   sl.registerLazySingleton<PostRemoteDatasource>(
     () => PostRemoteDatasource(
-      firestore: sl(),  // Inject FirebaseFirestore
+      firestore: sl(), 
+      barberRemoteDatasource: sl(), 
     ),
   );
 
@@ -141,9 +175,36 @@ Future<void> init() async {
     ),
   );
 
+  // User remote data source
+  sl.registerLazySingleton<UserRemoteDatasource>(
+    () => UserRemoteDatasource(
+      firestore: sl(),  // Inject FirebaseFirestore
+    ),
+  );
+
+  // Chat remote data source
+  sl.registerLazySingleton<ChatRemoteDatasource>(
+    () => ChatRemoteDatasource(
+      firestore: sl(),  // Inject FirebaseFirestore
+      userRemoteDatasource: sl(),  // Inject UserRemoteDatasource
+    ),
+  );
+
+  // Comments remote data source
+  sl.registerLazySingleton<CommentsRemoteDatasource>(
+    () => CommentsRemoteDatasource(
+      firestore: sl(),  // Inject FirebaseFirestore
+    ),
+  );
+
   // Cloudinary service
   sl.registerLazySingleton<CloudinaryService>(
     () => CloudinaryService(),
+  );
+
+  // Share service
+  sl.registerLazySingleton<ShareService>(
+    () => ShareServiceImpl(),
   );
 
  
@@ -193,6 +254,27 @@ Future<void> init() async {
     () => BarberServiceRepositoryImpl(datasource: sl()),
   );
 
+  // Chat repository
+  sl.registerLazySingleton<ChatRepository>(
+    () => ChatRepositoryImpl(
+      chatRemoteDatasource: sl(),
+    ),  
+  );
+
+  // User repository
+  sl.registerLazySingleton<UserRepository>(
+    () => UserRepoImpl(
+      remoteDatasource: sl(),
+    ),
+  );
+
+  // Comments repository
+  sl.registerLazySingleton<CommentsRepository>(
+    () => CommentsRepositoryImpl(
+      commentsRemoteDatasource: sl(),
+    ),
+  );
+
   // !==================== Use Cases ====================
   sl.registerLazySingleton<RegisterBarberUseCase>(
     () => RegisterBarberUseCase(repository: sl()),
@@ -232,6 +314,16 @@ Future<void> init() async {
     () => GetPostsUseCase(repository: sl()),
   );
 
+  // Delete post use case
+  sl.registerLazySingleton<DeletePostUsecase>(
+    () => DeletePostUsecase(postRepository: sl()),
+  );
+
+  // Get post with barber use case
+  sl.registerLazySingleton<GetPostWithBarberUsecase>(
+    () => GetPostWithBarberUsecase(postRepository: sl()),
+  );
+
   // Update barber use case
   sl.registerLazySingleton<UpdateBarberUseCase>(
     () => UpdateBarberUseCase(repository: sl()),
@@ -259,6 +351,26 @@ Future<void> init() async {
   // Update barber newdata use case
   sl.registerLazySingleton<UpdateBarberNewdataUsecase>(
     () => UpdateBarberNewdataUsecase(repo: sl()),
+  );
+
+  // Get chat users use case
+  sl.registerLazySingleton<GetChatUsersUsecase>(
+    () => GetChatUsersUsecase(repository: sl()),
+  );
+
+  // Chat labels use case
+  sl.registerLazySingleton<ChatLabelsUsecase>(
+    () => ChatLabelsUsecase(chatRepository: sl()),
+  );
+
+  // Get comments use case
+  sl.registerLazySingleton<GetCommentsUsecase>(
+    () => GetCommentsUsecase(commentsRepository: sl()),
+  );
+
+  // Send message use case
+  sl.registerLazySingleton<SendMessageUsecase>(
+    () => SendMessageUsecase(chatRepository: sl()),
   );
 
   // !==================== Blocs ====================
@@ -328,6 +440,22 @@ Future<void> init() async {
     ),
   );
 
+  // Fetch post with barber bloc
+  sl.registerFactory<FetchPostWithBarberBloc>(
+    () => FetchPostWithBarberBloc(
+      usecase: sl(),
+      localDB: sl(),
+    ),
+  );
+
+  // Fetch comment bloc
+  sl.registerFactory<FetchCommentBloc>(
+    () => FetchCommentBloc(
+      getCommentsUsecase: sl(),
+      localDB: sl(),
+    ),
+  );
+
   // Update profile bloc
   sl.registerFactory<UpdateProfileBloc>(
     () => UpdateProfileBloc(
@@ -370,5 +498,95 @@ Future<void> init() async {
       localDB: sl(),
       usecase: sl(),
     ),
+  );
+
+  // Fetch chat user label bloc
+  sl.registerFactory<FetchChatUserlebelBloc>(
+    () => FetchChatUserlebelBloc(
+      localDB: sl(),
+      usecase: sl(),
+    ),
+  );
+
+  // Message badge cubit
+  sl.registerFactory<MessageBadgeCubit>(
+    () => MessageBadgeCubit(
+      usecase: sl(),
+      authLocalDatasource: sl(),
+    ),
+  );
+
+  // Last message cubit
+  sl.registerFactory<LastMessageCubit>(
+    () => LastMessageCubit(
+      usecase: sl(),
+      localDB: sl(),
+    ),
+  );
+
+  // Fetch user bloc
+  sl.registerFactory<FetchUserBloc>(
+    () => FetchUserBloc(
+      userRepository: sl(),
+      localDB: sl(),
+    ),
+  );
+
+  // Status chat request cubit
+  sl.registerFactory<StatusChatRequstDartCubit>(
+    () => StatusChatRequstDartCubit(sl()),
+  );
+
+  // Send message bloc
+  sl.registerFactory<SendMessageBloc>(
+    () => SendMessageBloc(
+      usecase: sl(),
+      cloudinaryService: sl(),
+    ),
+  );
+
+  // Progresser cubit
+  sl.registerFactory<ProgresserCubit>(
+    () => ProgresserCubit(),
+  );
+
+  // Delete post cubit
+  sl.registerFactory<DeletePostCubit>(
+    () => DeletePostCubit(deletePostUsecase: sl()),
+  );
+
+  // Like post cubit
+  sl.registerFactory<LikePostCubit>(
+    () => LikePostCubit(firestore: sl()),
+  );
+
+  // Like comment cubit
+  sl.registerFactory<LikeCommentCubit>(
+    () => LikeCommentCubit(firestore: sl()),
+  );
+
+  // Emoji picker cubit
+  sl.registerFactory<EmojiPickerCubit>(
+    () => EmojiPickerCubit(),
+  );
+
+  // Navigation cubit
+  sl.registerFactory<ButtomNavCubit>(
+    () => ButtomNavCubit(),
+  );
+
+  // Profile tab cubit
+  sl.registerFactory<ProfiletabCubit>(
+    () => ProfiletabCubit(),
+  );
+
+  // Post like animation cubit
+  sl.registerFactory<PostLikeAnimationCubit>(
+    () => PostLikeAnimationCubit(),
+  );
+
+  // Share cubit
+  sl.registerFactory<ShareCubit>(
+    () => ShareCubit(shareService: sl()),
   );
 }

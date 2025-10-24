@@ -61,15 +61,10 @@ RefreshIndicator postBlocSuccessStateBuilder({
             postUrl: data.post.imageUrl,
             shopUrl: data.barber.image ?? AppImages.barberEmpty,
             chatOnTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => IndividualChatScreen(
-              //       userId: state.userId,
-              //       barberId: data.barber.uid,
-              //     ),
-              //   ),
-              // );
+              Navigator.pushNamed(context, AppRoutes.chatWindow, arguments: {
+                'barberId': data.barber.uid,
+                'userId': state.userId,
+              });
             },
             shareOnTap: () {
               context.read<ShareCubit>().sharePost(

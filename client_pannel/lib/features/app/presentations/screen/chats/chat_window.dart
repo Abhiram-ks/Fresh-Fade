@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:client_pannel/core/di/di.dart';
 import 'package:client_pannel/features/app/presentations/state/bloc/fetch_bloc/fetch_abarber_bloc/fetch_abarber_bloc.dart';
@@ -41,13 +40,11 @@ class _ChatWindowState extends State<ChatWindow> {
         BlocProvider(create: (context) => sl<SendMessageBloc>()),
         BlocProvider(create: (context) => ProgresserCubit()),
         BlocProvider(create: (context) => EmojiPickerCubit()),
-  
-        
       ],
       child: LayoutBuilder(
         builder: (context, constraints) {
           double screenWidth = constraints.maxWidth;
-          double screenHeight = constraints.maxHeight;
+
           return SafeArea(
             child: Scaffold(
               appBar: ChatAppBar(

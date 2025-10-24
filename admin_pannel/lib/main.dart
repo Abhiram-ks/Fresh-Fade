@@ -7,6 +7,7 @@ import 'package:admin_pannel/service/cloudinary/cloudinary_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,15 +22,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-     create: (context) => sl<ServiceMangementBloc>(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Fresh Fide in',
-        theme: AppTheme.lightTheme,
-        initialRoute: AppRoutes.splash,
-        onGenerateRoute: AppRoutes.generateRoute,
-      ),
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return BlocProvider(
+          create: (context) => sl<ServiceMangementBloc>(),
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Fresh Fide in',
+            theme: AppTheme.lightTheme,
+            initialRoute: AppRoutes.splash,
+            onGenerateRoute: AppRoutes.generateRoute,
+          ),
+        );
+      },
     );
   }
 }

@@ -4,7 +4,6 @@
 -------------------------------------------------------*/
 
 import 'package:intl/intl.dart';
-
 import '../../features/app/data/model/date_model.dart';
 
 bool isSlotTimeExceeded(String dateStr, String timeStr) {

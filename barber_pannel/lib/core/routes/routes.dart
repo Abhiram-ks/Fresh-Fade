@@ -1,9 +1,12 @@
 
+import 'package:barber_pannel/features/app/presentation/screens/chat/chat_windows.dart';
+import 'package:barber_pannel/features/app/presentation/screens/setting/post_screen/post_screen.dart';
 import 'package:barber_pannel/features/app/presentation/screens/setting/profile_screen.dart';
 import 'package:barber_pannel/features/auth/presentation/screen/password_screen.dart';
 import 'package:barber_pannel/features/auth/presentation/screen/register_credential.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../features/app/presentation/screens/chat/user_detail_view.dart';
 import '../../features/app/presentation/screens/nav_screen.dart';
 import '../../features/app/presentation/screens/setting/service_manage/service_add_screen.dart';
 import '../../features/app/presentation/screens/setting/time_manage/time_management.dart' show TimeManagementScreen;
@@ -27,7 +30,9 @@ class AppRoutes {
   static const String serviceManage = '/service_manage_screen.dart';
   static const String serviceAdd = '/service_add_screen.dart';
   static const String timeManagement = '/time_management.dart';
-
+  static const String chatWindows = '/chat_windows';
+  static const String post = '/post_screen';
+  static const String userProfile = '/user_detail_view';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -60,7 +65,16 @@ class AppRoutes {
       return CupertinoPageRoute(builder: (_) => ServiceAddScreen());
       case timeManagement:
       return CupertinoPageRoute(builder: (_) => TimeManagementScreen());
-
+      case chatWindows:
+      final arguments  = settings.arguments as Map<String, dynamic>;
+      final userId = arguments['userId'] as String;
+      final barberId = arguments['barberId'] as String;
+      return MaterialPageRoute(builder: (_) => ChatWindowsScreen(userId: userId, barberId: barberId));
+      case post:
+      return MaterialPageRoute(builder: (_) => PostScreen());
+      case userProfile:
+      final userId = settings.arguments as String;
+      return MaterialPageRoute(builder: (_) => UserProfileScreen(userId: userId));
       default:
         return MaterialPageRoute(
           builder:

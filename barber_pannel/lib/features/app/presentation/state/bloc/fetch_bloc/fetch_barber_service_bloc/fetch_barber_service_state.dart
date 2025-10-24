@@ -7,14 +7,17 @@ final class FetchBarberServiceInitial extends FetchBarberServiceState {}
 
 final class FetchBarberServiceLoading extends FetchBarberServiceState {}
 
-final class FetchBarberServiceLoaded extends FetchBarberServiceState {
-  final List<BarberServiceEntity> barberServices;
+final class FetchBarberServiceEmpty extends FetchBarberServiceState {}
 
-  FetchBarberServiceLoaded({required this.barberServices});
+final class FetchBarberServiceLoaded extends FetchBarberServiceState {
+  final List<BarberServiceEntity> services;
+
+  FetchBarberServiceLoaded({required this.services});
 }
 
-final class FetchBarberServiceFailure extends FetchBarberServiceState {
+final class FetchBarberServiceError extends FetchBarberServiceState {
   final String message;
 
-  FetchBarberServiceFailure({required this.message});
+  FetchBarberServiceError({required this.message});
 }
+

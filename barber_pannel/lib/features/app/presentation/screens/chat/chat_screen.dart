@@ -1,7 +1,7 @@
 import 'package:barber_pannel/core/common/custom_appbar2.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../core/common/custom_appbar.dart';
+import '../../widget/chat_widget/chat_body_widget.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
@@ -23,8 +23,7 @@ class ChatScreen extends StatelessWidget {
               ),
             ],
           ),
-          body: ChatScreenBodyWidget(
-                  screenHeight: screenHeight, screenWidth: screenWidth),
+          body: ChatScreenBodyWidget(  screenHeight: screenHeight, screenWidth: screenWidth),
         );
       },
     );

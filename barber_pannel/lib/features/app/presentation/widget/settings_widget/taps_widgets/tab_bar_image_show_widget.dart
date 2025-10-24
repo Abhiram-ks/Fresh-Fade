@@ -1,11 +1,15 @@
-
 import 'package:barber_pannel/core/images/app_image.dart';
 import 'package:barber_pannel/features/app/presentation/screens/setting/setting_screen.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_post_bloc/fetch_posts_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/widget/settings_widget/taps_widgets/handle_delete_post_state.dart';
+import 'package:barber_pannel/features/auth/presentation/state/cubit/delete_post_cubit/delete_post_cubit.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../../../../core/routes/routes.dart';
 import '../../../../../../core/themes/app_colors.dart';
 
 class TabbarImageShow extends StatelessWidget {
@@ -49,9 +53,76 @@ class TabbarImageShow extends StatelessWidget {
             itemBuilder: (context, index) {
               final post = state.posts[index];
 
-              return imageshow(
-                imageUrl: post.imageUrl,
-                imageAsset: AppImages.appLogo,
+              return BlocListener<DeletePostCubit, DeletePostState>(
+                listener: (context, state) {
+                  handleDeletePostsState(context, state);
+                },
+                child: InkWell(
+                  onTap: () {
+                    // Capture the cubit reference before opening the dialog
+                    final deletePostCubit = context.read<DeletePostCubit>();
+                    
+                    showCupertinoModalPopup(
+                      context: context,
+                      builder:
+                          (BuildContext content) => CupertinoActionSheet(
+                            title: const Text(
+                              'Delete Post',
+                            ),
+                            message: const Text(
+                              'Are you sure you want to delete this post? This action cannot be undone.',
+                            ),
+                            actions: <CupertinoActionSheetAction>[
+                              CupertinoActionSheetAction(
+                                onPressed: () {
+                                  deletePostCubit.deletePost(
+                                      barberId: post.barberId,
+                                      docId: post.postId);
+                                  Navigator.pop(content);
+                                },
+                                isDestructiveAction: true,
+                                child: const Text(
+                                  'Delete for Post',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              CupertinoActionSheetAction(
+                                onPressed: () {
+                                  Navigator.pop(content);
+                                  Navigator.pushNamed(context, AppRoutes.post);
+                                },
+                                child: const Text(
+                                  'View Post(s)',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppPalette.blackColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                            cancelButton: CupertinoActionSheetAction(
+                              onPressed: () => Navigator.pop(content),
+                              child: const Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppPalette.blackColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                    );
+                  },
+                  child: imageshow(
+                    imageUrl: post.imageUrl,
+                    imageAsset: AppImages.appLogo,
+                  ),
+                ),
               );
             },
           );

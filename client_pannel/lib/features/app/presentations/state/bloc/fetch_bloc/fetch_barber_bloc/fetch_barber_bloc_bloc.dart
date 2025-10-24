@@ -29,7 +29,6 @@ class FetchAllbarberBloc
     await emit.forEach<List<BarberEntity>>(
         getAllBarbersUseCase(), onData: (barbers) {
       // final verifiedBarbers =  barbers.where((barber) => barber.isVerified).toList();
-      log('isvarifiled ${barbers.length}');
       if (barbers.isEmpty) {
         return FetchAllbarberListEmpty();
       } else {

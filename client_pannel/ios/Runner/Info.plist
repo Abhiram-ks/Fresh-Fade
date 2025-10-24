@@ -49,5 +49,12 @@
 	<array>
 		<string>tel</string>
 	</array>
+	<!-- Location Permissions -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Fresh Fade needs access to your location to show nearby barbershops and provide personalized services.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Fresh Fade needs access to your location to show nearby barbershops and provide personalized services.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Fresh Fade needs access to your location to show nearby barbershops and provide personalized services.</string>
 </dict>
 </plist>

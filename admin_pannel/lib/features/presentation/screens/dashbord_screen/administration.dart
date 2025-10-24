@@ -3,6 +3,7 @@ import 'package:admin_pannel/core/constant/constant.dart';
 import 'package:admin_pannel/core/images/images.dart';
 import 'package:admin_pannel/core/themes/app_colors.dart';
 import 'package:admin_pannel/features/domain/entity/barber_entity.dart';
+import 'package:admin_pannel/features/presentation/screens/dashbord_screen/service.dart';
 import 'package:admin_pannel/features/presentation/state/bloc/bloc_and_unbloc_bloc/blocandunbloc_bloc.dart';
 import 'package:admin_pannel/features/presentation/state/bloc/fetch_barber_bloc/fetch_barber_bloc.dart';
 import 'package:admin_pannel/features/presentation/state/bloc/toggleview_bloc/toggleview_bloc.dart';
@@ -37,18 +38,27 @@ class AdministrationScreen extends StatelessWidget {
       ],
       child: LayoutBuilder(
         builder: (context, constraints) {
-          return AdministrationBody(
-            screenWidth: screenWidth,
-            screenHeight: screenHeight,
-          );
+          // Check if it's a large screen (web/tablet)
+          bool isLargeScreen = screenWidth > 900;
+
+          return isLargeScreen
+              ? WebResponsiveAdministrationLayout(
+                screenWidth: screenWidth,
+                screenHeight: screenHeight,
+              )
+              : MobileAdministrationLayout(
+                screenWidth: screenWidth,
+                screenHeight: screenHeight,
+              );
         },
       ),
     );
   }
 }
 
-class AdministrationBody extends StatefulWidget {
-  const AdministrationBody({
+// Mobile Layout (unchanged)
+class MobileAdministrationLayout extends StatefulWidget {
+  const MobileAdministrationLayout({
     super.key,
     required this.screenWidth,
     required this.screenHeight,
@@ -58,13 +68,15 @@ class AdministrationBody extends StatefulWidget {
   final double screenHeight;
 
   @override
-  State<AdministrationBody> createState() => _AdministrationBodyState();
+  State<MobileAdministrationLayout> createState() =>
+      _MobileAdministrationLayoutState();
 }
 
-class _AdministrationBodyState extends State<AdministrationBody>
+class _MobileAdministrationLayoutState extends State<MobileAdministrationLayout>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+
   @override
   void initState() {
     super.initState();
@@ -147,6 +159,313 @@ class _AdministrationBodyState extends State<AdministrationBody>
   }
 }
 
+// Web Responsive Layout for Large Screens
+class WebResponsiveAdministrationLayout extends StatefulWidget {
+  const WebResponsiveAdministrationLayout({
+    super.key,
+    required this.screenWidth,
+    required this.screenHeight,
+  });
+
+  final double screenWidth;
+  final double screenHeight;
+
+  @override
+  State<WebResponsiveAdministrationLayout> createState() =>
+      _WebResponsiveAdministrationLayoutState();
+}
+
+class _WebResponsiveAdministrationLayoutState
+    extends State<WebResponsiveAdministrationLayout>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<FetchBarberBloc>().add(FetchAllBarbersEvent());
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Container(
+      color: const Color.fromARGB(255, 245, 245, 245),
+      child: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 1400, minWidth: 1000),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Left Sidebar - Administration Info
+              Expanded(
+                flex: 3,
+                child: Container(
+                  margin: const EdgeInsets.all(20),
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Container(
+                      padding: const EdgeInsets.all(30),
+                      decoration: BoxDecoration(
+                        color: AppPalette.whiteColor,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppPalette.blackColor.withValues(
+                              alpha: 0.05,
+                            ),
+                            blurRadius: 20,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Header
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: AppPalette.blueColor.withValues(
+                                    alpha: 0.1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(
+                                  CupertinoIcons.person_2,
+                                  color: AppPalette.blueColor,
+                                  size: 24,
+                                ),
+                              ),
+                              ConstantWidgets.width20(context),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Administration',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppPalette.blackColor,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Manage barbers and requests',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        color: AppPalette.blackColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          ConstantWidgets.hight30(context),
+
+                          // Quick Actions
+                          InkWell(
+                            onTap: () {
+                              context.read<ToggleviewBloc>().add(
+                                ToggleviewAction(),
+                              );
+                            },
+                            child: buildInfoCard(
+                              icon: Icons.person_search,
+                              title: 'Administration Enquiries',
+                              description: 'Review and manage barber requests',
+                              color: AppPalette.orengeColor,
+                            ),
+                          ),
+                          ConstantWidgets.hight20(context),
+                          buildInfoCard(
+                            icon: CupertinoIcons.calendar,
+                            title: 'Manage Bookings',
+                            description: 'View and manage appointment bookings',
+                            color: AppPalette.blueColor,
+                          ),
+                          ConstantWidgets.hight20(context),
+                          buildInfoCard(
+                             icon: Icons.account_balance_wallet,
+                            title: 'Wallet Configuration',
+                            description:
+                                'Configure payment and wallet settings',
+                            color: AppPalette.greenColor,
+                          ),
+                          ConstantWidgets.hight30(context),
+                          // Stats Section
+                          Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: AppPalette.blueColor.withValues(
+                                alpha: 0.05,
+                              ),
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: AppPalette.blueColor.withValues(
+                                  alpha: 0.1,
+                                ),
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      CupertinoIcons.chart_bar,
+                                      color: AppPalette.blueColor,
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      'Quick Stats',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppPalette.blueColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                ConstantWidgets.hight10(context),
+                                Text(
+                                  'Monitor barber registrations, active accounts, and pending requests in real-time.',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 13,
+                                    color: AppPalette.greyColor,
+                                    height: 1.5,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Right Side - Administration Content
+              Expanded(
+                flex: 4,
+                child: Container(
+                  margin: const EdgeInsets.all(20),
+                  child: Container(
+                    padding: const EdgeInsets.all(30),
+                    decoration: BoxDecoration(
+                      color: AppPalette.whiteColor,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppPalette.blackColor.withValues(alpha: 0.05),
+                          blurRadius: 20,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Content Header
+                        BlocBuilder<ToggleviewBloc, ToggleviewState>(
+                          builder: (context, state) {
+                            return Row(
+                              children: [
+                                Icon(
+                                  state is ToggleviewStatus
+                                      ? CupertinoIcons.person_2_fill
+                                      : CupertinoIcons.person_badge_plus,
+                                  color: AppPalette.blueColor,
+                                  size: 24,
+                                ),
+                                ConstantWidgets.width20(context),
+                                Text(
+                                  state is ToggleviewStatus
+                                      ? 'Administration Status'
+                                      : 'Administration Requests',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppPalette.blackColor,
+                                  ),
+                                ),
+                                const Spacer(),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        state is ToggleviewStatus
+                                            ? AppPalette.greenColor.withValues(
+                                              alpha: 0.1,
+                                            )
+                                            : AppPalette.orengeColor.withValues(
+                                              alpha: 0.1,
+                                            ),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    state is ToggleviewStatus
+                                        ? 'Status View'
+                                        : 'Request View',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      color:
+                                          state is ToggleviewStatus
+                                              ? AppPalette.greenColor
+                                              : AppPalette.orengeColor,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                        ConstantWidgets.hight20(context),
+
+                        // Content Area
+                        Expanded(
+                          child: BlocBuilder<ToggleviewBloc, ToggleviewState>(
+                            builder: (context, state) {
+                              return state is ToggleviewStatus
+                                  ? BarbersStatusBuilder(
+                                    screenHeight: widget.screenHeight,
+                                    screenWidth: widget.screenWidth,
+                                  )
+                                  : RequstBlocBuilder(
+                                    screenHeight: widget.screenHeight,
+                                    screenWidth: widget.screenWidth,
+                                  );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+}
+
 class BarbersStatusBuilder extends StatelessWidget {
   final double screenHeight;
   final double screenWidth;
@@ -159,64 +478,39 @@ class BarbersStatusBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     return BlocListener<BlocandunblocBloc, BlocandunblocState>(
-    listener: (context, blocunbloc) {
-      blocUnblocStateHandle(context, blocunbloc);
-    },
-    child:  BlocBuilder<FetchBarberBloc, FetchBarberState>(
-      builder: (context, state) {
-        if (state is FetchBarberLoading) {
-          return Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                SizedBox(
-                  width: 15,
-                  height: 15,
-                  child: CircularProgressIndicator(
-                    color: AppPalette.hintColor,
-                    backgroundColor: AppPalette.blueColor,
-                    strokeWidth: 2.5,
+    return BlocListener<BlocandunblocBloc, BlocandunblocState>(
+      listener: (context, blocunbloc) {
+        blocUnblocStateHandle(context, blocunbloc);
+      },
+      child: BlocBuilder<FetchBarberBloc, FetchBarberState>(
+        builder: (context, state) {
+          if (state is FetchBarberLoading) {
+            return Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  SizedBox(
+                    width: 15,
+                    height: 15,
+                    child: CircularProgressIndicator(
+                      color: AppPalette.hintColor,
+                      backgroundColor: AppPalette.blueColor,
+                      strokeWidth: 2.5,
+                    ),
                   ),
-                ),
-                SizedBox(width: 10),
-                Text(
-                  'Please wait...',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppPalette.blackColor,
-                    fontWeight: FontWeight.w500,
+                  SizedBox(width: 10),
+                  Text(
+                    'Please wait...',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppPalette.blackColor,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        } else if (state is FetchBarberEmpty) {
-          return Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "There's nothing here yet.",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  'No administration records available yet.',
-                  style: TextStyle(fontSize: 11),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          );
-        } else if (state is FetchBarberLoaded) {
-          final registedBarbers =
-              state.barbers
-                  .where((barber) => barber.isVerified == true)
-                  .toList();
-
-          if (registedBarbers.isEmpty) {
+                ],
+              ),
+            );
+          } else if (state is FetchBarberEmpty) {
             return Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -235,77 +529,111 @@ class BarbersStatusBuilder extends StatelessWidget {
                 ],
               ),
             );
-          }
-          return ListView.separated(
-            itemCount: registedBarbers.length,
-            itemBuilder: (context, index) {
-              final barber = registedBarbers[index];
-              return RequestCardWidget(
-                screenHeight: screenHeight,
-                screenWidth: screenWidth,
-                barber: barber,
-                postive: 'UnBlock',
-                onPostive: () {
-                  if (barber.isBloc) {
-                    context.read<BlocandunblocBloc>()
-                        .add(ShowUnBlacAlertEvent(
-                          uid: barber.uid,
-                          name: barber.barberName,
-                          ventureName: barber.ventureName));
-                  } else {
-                    CustomSnackBar.show(context, 
-                    message: "Account Alredy Active",
-                    textAlign: TextAlign.center,
-                    );
-                  }
-                },
-                negative: 'Block',
-                onNegative: () {
-                  if (barber.isBloc) {
-                    CustomSnackBar.show(context, 
-                    message: "Account Alredy Suspended",
-                    textAlign: TextAlign.center,
-                    );
-                  } else {
-                      context.read<BlocandunblocBloc>()
-                        .add(ShowBlocAlertEvent(
-                          uid: barber.uid,
-                          name: barber.barberName,
-                          ventureName: barber.ventureName));
-                  }
-                },
+          } else if (state is FetchBarberLoaded) {
+            final registedBarbers =
+                state.barbers
+                    .where((barber) => barber.isVerified == true)
+                    .toList();
+
+            if (registedBarbers.isEmpty) {
+              return Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "There's nothing here yet.",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      'No administration records available yet.',
+                      style: TextStyle(fontSize: 11),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               );
-            },
-            separatorBuilder:
-                (context, index) => ConstantWidgets.hight10(context),
+            }
+            return ListView.separated(
+              itemCount: registedBarbers.length,
+              itemBuilder: (context, index) {
+                final barber = registedBarbers[index];
+                return RequestCardWidget(
+                  screenHeight: screenHeight,
+                  screenWidth: screenWidth,
+                  barber: barber,
+                  postive: 'UnBlock',
+                  onPostive: () {
+                    if (barber.isBloc) {
+                      context.read<BlocandunblocBloc>().add(
+                        ShowUnBlacAlertEvent(
+                          uid: barber.uid,
+                          name: barber.barberName,
+                          ventureName: barber.ventureName,
+                        ),
+                      );
+                    } else {
+                      CustomSnackBar.show(
+                        context,
+                        message: "Account Alredy Active",
+                        textAlign: TextAlign.center,
+                      );
+                    }
+                  },
+                  negative: 'Block',
+                  onNegative: () {
+                    if (barber.isBloc) {
+                      CustomSnackBar.show(
+                        context,
+                        message: "Account Alredy Suspended",
+                        textAlign: TextAlign.center,
+                      );
+                    } else {
+                      context.read<BlocandunblocBloc>().add(
+                        ShowBlocAlertEvent(
+                          uid: barber.uid,
+                          name: barber.barberName,
+                          ventureName: barber.ventureName,
+                        ),
+                      );
+                    }
+                  },
+                );
+              },
+              separatorBuilder:
+                  (context, index) => ConstantWidgets.hight10(context),
+            );
+          }
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Unable to process the request.",
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  "Please try again later. Refresh the page",
+                  style: TextStyle(fontSize: 11),
+                  textAlign: TextAlign.center,
+                ),
+                IconButton(
+                  onPressed: () {
+                    context.read<FetchBarberBloc>().add(FetchAllBarbersEvent());
+                  },
+                  icon: Icon(Icons.refresh_rounded),
+                ),
+              ],
+            ),
           );
-        }
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Unable to process the request.",
-                style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                "Please try again later. Refresh the page",
-                style: TextStyle(fontSize: 11),
-                textAlign: TextAlign.center,
-              ),
-              IconButton(
-                onPressed: () {
-                  context.read<FetchBarberBloc>().add(FetchAllBarbersEvent());
-                },
-                icon: Icon(Icons.refresh_rounded),
-              ),
-            ],
-          ),
-        );
-      },
-   ),
+        },
+      ),
     );
   }
 }
@@ -411,17 +739,23 @@ class RequstBlocBuilder extends StatelessWidget {
                   barber: barber,
                   postive: 'Accept',
                   onPostive: () {
-                    context.read<RequestBloc>().add(AcceptAction(
+                    context.read<RequestBloc>().add(
+                      AcceptAction(
                         name: barber.barberName,
                         id: barber.uid,
-                        ventureName: barber.ventureName));
+                        ventureName: barber.ventureName,
+                      ),
+                    );
                   },
                   negative: 'Reject',
                   onNegative: () {
-                    context.read<RequestBloc>().add(RejectAction(
+                    context.read<RequestBloc>().add(
+                      RejectAction(
                         name: barber.barberName,
                         id: barber.uid,
-                        ventureName: barber.ventureName));
+                        ventureName: barber.ventureName,
+                      ),
+                    );
                   },
                   time:
                       barber.createdAt != null
@@ -429,7 +763,8 @@ class RequstBlocBuilder extends StatelessWidget {
                           : 'N/A',
                 );
               },
-              separatorBuilder: (context, index) => ConstantWidgets.hight10(context),
+              separatorBuilder:
+                  (context, index) => ConstantWidgets.hight10(context),
             );
           }
           return Center(
@@ -502,8 +837,8 @@ class RequestCardWidget extends StatelessWidget {
             Flexible(
               flex: 1,
               child: Container(
-                width: screenWidth * 0.11,
-                height: screenWidth * 0.11,
+                width: 60,
+                height: 60,
                 decoration: BoxDecoration(shape: BoxShape.circle),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100),
@@ -563,7 +898,7 @@ class RequestCardWidget extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 17,
-                          color: AppPalette.blueColor
+                          color: AppPalette.blueColor,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
