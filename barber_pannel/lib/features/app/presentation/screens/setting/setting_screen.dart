@@ -15,6 +15,7 @@ import '../../state/bloc/upload_post_bloc/upload_post_bloc.dart';
 import '../../widget/settings_widget/taps_widgets/tab_bar_image_show_widget.dart';
 import '../../widget/settings_widget/taps_widgets/tab_bar_post_add_widget.dart';
 import '../../widget/settings_widget/taps_widgets/tab_bar_setting_widget.dart';
+import '../../state/bloc/lauch_service_bloc/lauch_service_bloc.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -131,6 +132,7 @@ class _ProfileScrollViewState extends State<ProfileScrollView>
         BlocProvider(create: (context) => ProgresserCubit()),
         BlocProvider(create: (context) => sl<UploadPostBloc>()),
         BlocProvider(create: (context) => sl<DeletePostCubit>()),
+        BlocProvider(create: (context) => sl<LauchServiceBloc>()),
       ],
       child: CustomScrollView(
         controller: _scrollController,

@@ -114,7 +114,7 @@ class TabbarSettings extends StatelessWidget {
                 icon: CupertinoIcons.question_circle,
                 title: 'Help',
                 onTap: () {
-                  LauchServiceBloc().add(
+                  context.read<LauchServiceBloc>().add(
                     LauchServiceAlertBoxEvent(
                       name: 'Fresh Fade : Business: Shop owner',
                       email: 'freshfade.growblic@gmail.com',
