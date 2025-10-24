@@ -40,7 +40,7 @@ import 'package:barber_pannel/features/app/domain/usecase/update_barber_newdata_
 import 'package:barber_pannel/features/app/domain/usecase/updated_barber_service_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/upload_barber_service_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/upload_post_usecase.dart';
-import 'package:barber_pannel/features/app/presentation/state/bloc/barber_/barber_service_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/barber_service_bloc/barber_service_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/barber_service_modification_bloc/barber_service_modification_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_barber_service_bloc/fetch_barber_service_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_banner_bloc/fetch_banner_bloc.dart';

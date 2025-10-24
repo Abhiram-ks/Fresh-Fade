@@ -4,7 +4,7 @@ import 'package:barber_pannel/core/common/custom_button.dart';
 import 'package:barber_pannel/core/common/custom_dialogbox.dart';
 import 'package:barber_pannel/core/common/custom_snackbar.dart';
 import 'package:barber_pannel/core/di/injection_contains.dart';
-import 'package:barber_pannel/features/app/presentation/state/bloc/barber_/barber_service_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/barber_service_bloc/barber_service_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/cubit/service_select_cubit/service_select_cubit.dart';
 import 'package:barber_pannel/features/auth/presentation/state/cubit/progresser_cubit/progresser_cubit.dart';
 import 'package:flutter/material.dart';
