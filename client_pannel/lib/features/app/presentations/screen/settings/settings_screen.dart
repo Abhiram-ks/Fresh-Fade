@@ -1,6 +1,8 @@
+
 import 'package:client_pannel/core/di/di.dart';
 import 'package:client_pannel/features/app/domain/entity/user_entity.dart';
 import 'package:client_pannel/features/app/presentations/state/bloc/fetch_bloc/fetch_user_bloc/fetch_user_bloc.dart';
+import 'package:client_pannel/features/app/presentations/state/bloc/launcher_service_bloc/launcher_service_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +12,11 @@ import '../../../../../core/constant/constant.dart';
 import '../../../../../core/images/app_images.dart';
 import '../../../../../core/routes/routes.dart';
 import '../../../../../core/themes/app_colors.dart';
+import '../../../../../service/launcher/launcher_service.dart';
+import '../../state/bloc/delete_account_bloc/delete_account_bloc.dart';
 import '../../state/bloc/logout_bloc/logout_bloc.dart';
+import '../../widget/widgets/handle_delete_account_widget.dart';
+import '../../widget/widgets/handle_email_launcher_widget.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -31,8 +37,12 @@ class _SettingsScreenState extends State<SettingsScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return BlocProvider(
-      create: (context) => sl<LogoutBloc>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => sl<LogoutBloc>()),
+        BlocProvider(create: (context) => sl<LauncherServiceBloc>()),
+        BlocProvider(create: (context) => sl<DeleteAccountBloc>()),
+      ],
       child: LayoutBuilder(
         builder: (context, constraints) {
           double screenHeight = constraints.maxHeight;
@@ -90,7 +100,9 @@ class _SettingsScreenState extends State<SettingsScreen>
                             },
                             child: TextButton(
                               onPressed: () {
-                                context.read<LogoutBloc>().add(LogoutRequestEvent());
+                                context.read<LogoutBloc>().add(
+                                  LogoutRequestEvent(),
+                                );
                               },
                               child: Text(
                                 'Logout',
@@ -352,7 +364,12 @@ class CustomSettingsWidget extends StatelessWidget {
               screenHeight: screenHeight,
               icon: Icons.book_online,
               title: 'My Booking',
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.myBooking,
+                );
+              },
             ),
             Divider(color: AppPalette.hintColor),
             ConstantWidgets.hight10(context),
@@ -360,26 +377,63 @@ class CustomSettingsWidget extends StatelessWidget {
               'Community support',
               style: TextStyle(color: AppPalette.greyColor),
             ),
-            settingsWidget(
-              context: context,
-              screenHeight: screenHeight,
-              icon: CupertinoIcons.question_circle,
-              title: 'Help',
-              onTap: () {},
+            BlocListener<LauncherServiceBloc, LauncherServiceState>(
+              listener: (context, state) {
+                handleEmailLaucher(context, state);
+              },
+              child: settingsWidget(
+                context: context,
+                screenHeight: screenHeight,
+                icon: CupertinoIcons.question_circle,
+                title: 'Help',
+                onTap: () {
+                  context.read<LauncherServiceBloc>().add(
+                    LauncherServiceAlertEvent(
+                      name: 'Fresh Fade Team',
+                      email: 'freshfade.growblic@gmail.com',
+                      subject: "To connect with Fresh Fade : Business for help",
+                      body:
+                          'I would like to receive information on how to use the application effectively and how to get the best results from it in a short amount of time.',
+                    ),
+                  );
+                },
+              ),
             ),
-            settingsWidget(
-              context: context,
-              screenHeight: screenHeight,
-              icon: CupertinoIcons.bubble_left,
-              title: 'Feedback',
-              onTap: () {},
+            BlocListener<LauncherServiceBloc, LauncherServiceState>(
+              listener: (context, state) {
+                handleEmailLaucher(context, state);
+              },
+              child: settingsWidget(
+                context: context,
+                screenHeight: screenHeight,
+                icon: CupertinoIcons.bubble_left,
+                title: 'Feedback',
+                onTap: () {
+                  context.read<LauncherServiceBloc>().add(
+                    LauncherServiceAlertEvent(
+                      name: 'Fresh Fade Team',
+                      email: 'freshfade.growblic@gmail.com',
+                      subject: "Feedback on Fresh Fade : Business Application",
+                      body:
+                          'I would like to provide feedback on the application and suggest improvements for the application.',
+                    ),
+                  );
+                },
+              ),
             ),
             settingsWidget(
               context: context,
               screenHeight: screenHeight,
               icon: CupertinoIcons.star,
               title: 'Rate app',
-              onTap: () {},
+              onTap: () {
+                LauncerService.launchingFunction(
+                  url:
+                      'https://play.google.com/store/apps/details?id=com.freshfade.client',
+                  name: 'Rate app',
+                  context: context,
+                );
+              },
             ),
             Divider(color: AppPalette.hintColor),
             ConstantWidgets.hight10(context),
@@ -392,28 +446,56 @@ class CustomSettingsWidget extends StatelessWidget {
               screenHeight: screenHeight,
               icon: CupertinoIcons.doc,
               title: 'Terms & Conditions',
-              onTap: () {},
+              onTap: () {
+                LauncerService.launchingFunction(
+                  url:
+                      'https://www.freeprivacypolicy.com/live/5c475448-ba19-41a2-95cc-3b35d16d0fb8',
+                  name: 'Terms & Conditions',
+                  context: context,
+                );
+              },
             ),
             settingsWidget(
               context: context,
               screenHeight: screenHeight,
               icon: Icons.gpp_good_outlined,
               title: 'Privacy Policy',
-              onTap: () {},
+              onTap: () {
+                LauncerService.launchingFunction(
+                  url:
+                      'https://www.freeprivacypolicy.com/live/f9333ad0-99a8-4550-a3da-97f6f94b524a',
+                  name: 'Privacy Policy',
+                  context: context,
+                );
+              },
             ),
             settingsWidget(
               context: context,
               screenHeight: screenHeight,
               icon: Icons.gavel_outlined,
               title: 'Cookies Policy',
-              onTap: () {},
+              onTap: () {
+                LauncerService.launchingFunction(
+                  url:
+                      'https://www.freeprivacypolicy.com/live/00d9f0de-254b-42da-b97a-0feca46562d5',
+                  name: 'Cookies Policy',
+                  context: context,
+                );
+              },
             ),
             settingsWidget(
               context: context,
               screenHeight: screenHeight,
               icon: Icons.rotate_left_rounded,
               title: 'Service & Refund Policy',
-              onTap: () {},
+              onTap: () {
+                LauncerService.launchingFunction(
+                  url:
+                      'https://www.freeprivacypolicy.com/live/eabfe916-6c9c-4b76-8aad-4bf754e803e1',
+                  name: 'Service & Refund Policy',
+                  context: context,
+                );
+              },
             ),
             Divider(color: AppPalette.hintColor),
             ConstantWidgets.hight10(context),
@@ -435,41 +517,19 @@ class CustomSettingsWidget extends StatelessWidget {
               ),
             ),
             ConstantWidgets.hight10(context),
-            InkWell(
-              onTap: () {
-                // showCupertinoDialog(
-                //   context: context,
-                //   builder: (_) => CupertinoAlertDialog(
-                //     title: Text('Delete Account?'),
-                //     content: Text(
-                //       'Are you sure you want to delete your account? This action is permanent and requires verification before proceeding to the next step.',
-                //     ),
-                //     actions: [
-                //       CupertinoDialogAction(
-                //         child: Text('Proceed ',
-                //             style: TextStyle(color: AppPalette.redClr)),
-                //         onPressed: () {
-                //           Navigator.pop(context);
-                //           Navigator.push(context, MaterialPageRoute(builder: (context) => DeleteAccountScreen(),));
-                //         },
-                //       ),
-                //       CupertinoDialogAction(
-                //         isDestructiveAction: true,
-                //         onPressed: () {
-                //           Navigator.of(context).pop();
-                //         },
-                //         child: Text(
-                //           'Cancel',
-                //           style: TextStyle(color: AppPalette.blackClr),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // );
+            BlocListener<DeleteAccountBloc, DeleteAccountState>(
+              listener: (context, state) {
+                handleDeleteAccountState(context, state);
               },
-              child: Text(
-                "Delete Account?",
-                style: TextStyle(color: AppPalette.redColor),
+              child: InkWell(
+                onTap: () {
+                  context.read<DeleteAccountBloc>().add(DeleteAccountAlertBoxEvent());
+
+                },
+                child: Text(
+                  "Delete Account?",
+                  style: TextStyle(color: AppPalette.redColor),
+                ),
               ),
             ),
             ConstantWidgets.hight50(context),

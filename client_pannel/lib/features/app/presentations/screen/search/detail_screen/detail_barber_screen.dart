@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/common/custom_button.dart';
+import '../../../../../../core/routes/routes.dart';
 import '../../../../../auth/presentations/state/cubit/progresser_cubit/progresser_cubit.dart';
 import '../../../state/bloc/fetch_bloc/fetch_barber_service_bloc/fetch_barber_service_bloc.dart';
 import '../../../state/bloc/fetch_bloc/fetch_barber_post_bloc/fetch_barber_post_bloc.dart';
+import '../../../state/cubit/fetch_single_wishlist_cubit/fetch_single_wishlist_cubit.dart';
+import '../../../state/cubit/wish_list_function_cubit/wish_list_fuction_cubit.dart';
 import '../../../widget/detail_widget/detail_body_widget.dart';
 
 class DetailBarberScreen extends StatelessWidget {
@@ -21,7 +24,9 @@ class DetailBarberScreen extends StatelessWidget {
         BlocProvider(create: (context) => sl<FetchAbarberBloc>()),
         BlocProvider(create: (context) => sl<FetchBarberServiceBloc>()),
         BlocProvider(create: (context) => sl<FetchBarberPostBloc>()),
-        BlocProvider(create: (context) => ProgresserCubit()),
+        BlocProvider(create: (context) => sl<ProgresserCubit>()),
+        BlocProvider(create: (context) => sl<WishListFuctionCubit>()),
+        BlocProvider(create: (context) => sl<FetchSingleWishlistCubit>()),
       ],
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -40,8 +45,9 @@ class DetailBarberScreen extends StatelessWidget {
                   padding: EdgeInsets.only(left: screenWidth * 0.09),
                   child: CustomButton(
                     text: 'Booking Now',
-                      onPressed: (){},
-              
+                      onPressed: (){
+                        Navigator.pushNamed(context, AppRoutes.booking, arguments: barberID);
+                      },
                   ),
                 ),
             ),

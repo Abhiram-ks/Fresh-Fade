@@ -1,5 +1,11 @@
+import 'package:client_pannel/core/common/custom_snackbar.dart';
+import 'package:client_pannel/features/app/presentations/screen/settings/my_booking_detail_screen/my_booking_detail_screen.dart';
 import 'package:client_pannel/features/app/presentations/state/bloc/fetch_bloc/fetch_banner_bloc/fetch_banner_bloc.dart';
+import 'package:client_pannel/features/app/presentations/state/bloc/fetch_bloc/fetch_booking_with_barber_bloc/fetch_booking_with_barber_bloc.dart';
 import 'package:client_pannel/features/app/presentations/state/bloc/location_bloc/location_bloc.dart';
+import 'package:client_pannel/features/app/presentations/widget/home_widget/home_horzontalicontimeline.dart';
+import 'package:client_pannel/service/call/call_service.dart';
+import 'package:client_pannel/service/share/share_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -7,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../core/constant/constant.dart';
 import '../../../../../core/images/app_images.dart';
+import '../../../../../core/routes/routes.dart';
 import '../../../../../core/themes/app_colors.dart';
 import '../../../../../service/formalt/time_date_formalt.dart';
 import '../../../domain/entity/banner_entity.dart';
@@ -14,6 +21,7 @@ import '../../state/bloc/fetch_bloc/fetch_user_bloc/fetch_user_bloc.dart';
 import '../../widget/home_widget/home_image_slider.dart';
 import '../../widget/home_widget/home_nearyby_map_widget.dart';
 import '../settings/settings_screen.dart';
+import 'booking_cancel.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -206,13 +214,23 @@ class _HomePageCustomScrollViewWidgetState
                           children: [
                             IconButton.filled(
                               style: IconButton.styleFrom(
-                                backgroundColor: AppPalette.blackColor,
+                                backgroundColor: const Color.fromARGB(
+                                  255,
+                                  49,
+                                  49,
+                                  49,
+                                ),
                               ),
                               icon: Icon(
-                                Icons.account_balance_wallet_outlined,
-                                color: AppPalette.whiteColor,
+                                Icons.shopping_bag,
+                                color: AppPalette.greenColor,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.myBooking,
+                                );
+                              },
                             ),
                             IconButton.filled(
                               style: IconButton.styleFrom(
@@ -222,7 +240,12 @@ class _HomePageCustomScrollViewWidgetState
                                 Icons.favorite_border_outlined,
                                 color: AppPalette.orengeColor,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.wishlist,
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -265,6 +288,16 @@ class _HomeScreenBodyWIdgetState extends State<HomeScreenBodyWIdget>
 
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<FetchBookingWithBarberBloc>().add(
+        FetchBookingWithBarberFilter(filter: 'pending'),
+      );
+    });
+  }
 
   @override
   void dispose() {
@@ -318,8 +351,204 @@ class _HomeScreenBodyWIdgetState extends State<HomeScreenBodyWIdget>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
+                      'Track My Upcoming Bookings',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.start,
+                    ),
+                    ConstantWidgets.hight10(context),
+                    BlocBuilder<
+                      FetchBookingWithBarberBloc,
+                      FetchBookingWithBarberState
+                    >(
+                      builder: (context, state) {
+                        if (state is FetchBookingWithBarberLoading) {
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[300] ?? AppPalette.greyColor,
+                            highlightColor: AppPalette.whiteColor,
+                            child: HorizontalIconTimelineHelper(
+                              screenWidth: MediaQuery.of(context).size.width,
+                              screenHeight: MediaQuery.of(context).size.height,
+                              createdAt: DateTime.parse(
+                                '2025-05-05T15:10:38+05:30',
+                              ),
+                              duration: 90,
+                              bookingId: '',
+                              slotTimes: [
+                                DateTime.parse('2025-05-12T08:00:00+05:30'),
+                                DateTime.parse('2025-05-12T08:45:00+05:30'),
+                              ],
+                              onTapInformation: () {},
+                              onTapCall: () {},
+                              onTapDirection: () {},
+                              onTapCancel: () {},
+                              imageUrl: AppImages.barberEmpty,
+                              onTapBarber: () {},
+                              rating: 4,
+                              shopName:
+                                  'Masterpiece - The Classic Cut Barbershop',
+                              isBlocked: false,
+                              shopAddress:
+                                  '123 Kingsway Avenue, Downtown District, Springfield, IL 62704',
+                            ),
+                          );
+                        } else if (state is FetchBookingWithBarberEmpty) {
+                          return Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ConstantWidgets.hight30(context),
+                                Icon(
+                                  Icons.cloud_off_outlined,
+                                  color: AppPalette.blackColor,
+                                  size: 50,
+                                ),
+                                Text(
+                                  'No Bookings Yet!',
+                                  style: TextStyle(color: AppPalette.orengeColor, fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "No activity found time to take action!",
+                                  style: TextStyle(color: AppPalette.blackColor, fontSize: 10),
+                                ),
+                                ConstantWidgets.hight30(context),
+                              ],
+                            ),
+                          );
+                        } else if (state is FetchBookingWithBarberSuccess) {
+                          return ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: EdgeInsets.zero,
+                            itemCount: state.bookings.length,
+                            separatorBuilder:
+                                (_, __) => ConstantWidgets.hight10(context),
+                            itemBuilder: (context, index) {
+                              final booking = state.bookings[index];
+
+                              return HorizontalIconTimelineHelper(
+                                screenWidth: MediaQuery.of(context).size.width,
+                                screenHeight: MediaQuery.of(context).size.height,
+                                createdAt: booking.booking.createdAt,
+                                duration: booking.booking.duration,
+                                slotTimes: booking.booking.slotTime,
+                                bookingId: booking.booking.bookingId ?? '',
+                                rating: booking.barber.rating,
+                                onTapInformation: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => MyBookingDetailScreen(
+                                            docId: booking.booking.bookingId!,
+                                            barberId: booking.booking.barberId,
+                                            userId: booking.booking.userId,
+                                          ),
+                                    ),
+                                  );
+                                },
+                                onTapCall: () {
+                                  CallHelper.makeCall(
+                                    booking.barber.phoneNumber,
+                                    context,
+                                  );
+                                },
+                                onTapDirection: () async {
+                                  try {
+                                    final position =
+                                        await context
+                                            .read<LocationBloc>()
+                                            .getLocationUseCase();
+                                    final barberLatLng =
+                                        await GeocodingHelper.addressToLatLng(
+                                          booking.barber.address,
+                                        );
+
+                                    await MapHelper.openGoogleMaps(
+                                      sourceLat: position.latitude,
+                                      sourceLng: position.longitude,
+                                      destLat: barberLatLng.latitude,
+                                      destLng: barberLatLng.longitude,
+                                    );
+                                  } catch (e) {
+                                    if (!context.mounted) return;
+                                    CustomSnackBar.show(
+                                      context,
+                                      message: 'Unable to Access Directions',
+                                      backgroundColor: AppPalette.redColor,
+                                      textAlign: TextAlign.center,
+                                      );
+                                  }
+                                },
+                                onTapCancel: () 
+                                     => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => CancelBookingScreen(
+                                              booking: booking.booking,
+                                            ),
+                                      ),
+                                    ),
+                                imageUrl:
+                                    booking.barber.image ??
+                                    AppImages.barberEmpty,
+                                onTapBarber:
+                                    () {
+                                      Navigator.pushNamed(context, 
+                                      AppRoutes.detailBarber,
+                                      arguments: booking.barber.uid,
+                                      );
+                                    },
+                                shopName: booking.barber.ventureName,
+                                isBlocked: booking.barber.isBloc,
+                                shopAddress: booking.barber.address,
+                              );
+                            },
+                          );
+                        }
+                        return Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ConstantWidgets.hight30(context),
+                              Icon(
+                                Icons.cloud_off_outlined,
+                                color: AppPalette.blackColor,
+                                size: 50,
+                              ),
+                              Text(
+                                'Oops! Something went wrong!',
+                                style: TextStyle(color: AppPalette.redColor),
+                              ),
+                              Text(
+                                "We're having trouble processing your request.",
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  context
+                                      .read<FetchBookingWithBarberBloc>()
+                                      .add(
+                                        FetchBookingWithBarberFilter(
+                                          filter: 'pending',
+                                        ),
+                                      );
+                                },
+                                icon: Icon(Icons.refresh_rounded),
+                              ),
+                              ConstantWidgets.hight30(context),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+
+                    ConstantWidgets.hight10(context),
+                    Text(
                       'Track Booking Status',
-                      style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.start,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.start,
                     ),
                     Text(
                       "Easily track and manage your bookings, view detailed history and payments, and stay updated with notifications for upcoming appointments.",
@@ -338,7 +567,7 @@ class _HomeScreenBodyWIdgetState extends State<HomeScreenBodyWIdget>
                       child: Text(
                         "No bookings yet",
                         style: TextStyle(fontWeight: FontWeight.bold),
-                         textAlign: TextAlign.center,
+                        textAlign: TextAlign.center,
                       ),
                     ),
                     Center(

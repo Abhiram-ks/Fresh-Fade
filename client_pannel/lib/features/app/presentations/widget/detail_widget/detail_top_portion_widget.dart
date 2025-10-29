@@ -1,4 +1,5 @@
 import 'package:client_pannel/features/app/domain/entity/barber_entity.dart';
+import 'package:client_pannel/features/app/presentations/state/cubit/wish_list_function_cubit/wish_list_fuction_cubit.dart';
 import 'package:client_pannel/features/auth/data/datasource/auth_local_datasource.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import '../../../../../service/call/call_service.dart';
 import '../../../../../service/share/share_service.dart';
 import '../../screen/settings/settings_screen.dart';
 import '../../state/bloc/location_bloc/location_bloc.dart';
+import '../../state/cubit/fetch_single_wishlist_cubit/fetch_single_wishlist_cubit.dart';
 import 'deatil_iconfileed_widget.dart';
 
 class DetailTopPortionWidget extends StatelessWidget {
@@ -157,8 +159,7 @@ class DetailTopPortionWidget extends StatelessWidget {
                   icon: Icons.location_on_sharp,
                   onTap: () async {
                     try {
-                      final position =
-                          await context
+                      final position = await context
                               .read<LocationBloc>()
                               .getLocationUseCase();
                       final barberLatLng =
@@ -182,30 +183,29 @@ class DetailTopPortionWidget extends StatelessWidget {
                   },
                   text: 'Direction',
                 ),
-                // BlocBuilder<FetchWishlistSinglebarberCubit, FetchWishlistSinglebarberState>(
-                //   builder: (context, state) {
-                // bool isLiked = false;
-                // if (state is FetchWishlistSinglebarberLoaded) {
-                //   isLiked = state.isLiked;
-                // }
+                BlocBuilder<FetchSingleWishlistCubit, FetchSingleWishlistState>(
+                  builder: (context, state) {
+                bool isLiked = false;
+                if (state is FetchWishlistSinglebarberLoaded) {
+                  isLiked = state.isLiked;
+                }
 
-                //   return
+                  return
                 detailsPageActions(
                   context: context,
-                  colors: AppPalette.buttonColor,
-                  // isLiked ? AppPalette.redColor : const Color(0xFFFEBA43),
+                  colors:  isLiked ? AppPalette.redColor : const Color(0xFFFEBA43),
                   screenWidth: screenWidth,
                   icon: CupertinoIcons.heart_fill,
                   onTap: () async {
-                    // context.read<WishlistFunctionCubit>().toggleWishlist(
-                    //       barberId: barber.uid,
-                    //       isCurrentlyLiked: isLiked,
-                    //     );
+                    context.read<WishListFuctionCubit>().toggleWishlist(
+                          barberId: barber.uid,
+                          isLiked: isLiked,
+                        );
                   },
                   text: 'Favorite',
+                );
+                  },
                 ),
-                //   },
-                // ),
               ],
             ),
           ),

@@ -120,6 +120,7 @@ void handleEmailLaucher(BuildContext context, LauchServiceState state) {
       context,
       message: 'Email launched successfully',
       textAlign: TextAlign.center,
+      backgroundColor: AppPalette.greenColor,
     );
   } else if (state is LauchServiceAlertBoxError) {
     CustomSnackBar.show(

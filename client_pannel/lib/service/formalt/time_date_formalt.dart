@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -165,4 +167,14 @@ String formatTimeOfDay(TimeOfDay time) {
   final minute = time.minute.toString().padLeft(2, '0');
   final period = time.period == DayPeriod.am ? 'AM' : 'PM';
   return '$hour:$minute $period';
+}
+
+
+//Generate a random 6 digit number
+class GenerateBookingOtp {
+  String generateOtp() {
+    final random = Random();
+    final otp = random.nextInt(900000) + 100000;
+    return otp.toString();
+  }
 }

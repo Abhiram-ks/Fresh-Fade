@@ -1,10 +1,13 @@
+import 'package:client_pannel/features/app/presentations/screen/home/wishlist_screen.dart';
 import 'package:client_pannel/features/app/presentations/screen/settings/map_screen/map_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../features/app/presentations/screen/chats/chat_window.dart';
 import '../../features/app/presentations/screen/nav.screen.dart';
+import '../../features/app/presentations/screen/search/booking_screen/booking_screen.dart';
 import '../../features/app/presentations/screen/search/detail_screen/detail_barber_screen.dart';
+import '../../features/app/presentations/screen/settings/my_booking_screen/my_booking_screen.dart';
 import '../../features/app/presentations/screen/settings/profile_screen/profile_screen.dart';
 import '../../features/auth/presentations/screen/login_screen.dart';
 import '../../features/auth/presentations/screen/splash_screen.dart';
@@ -18,6 +21,9 @@ class AppRoutes {
   static const String map = '/map_screen';
   static const String detailBarber = '/detail_barber_screen';
   static const String chatWindow = '/chat_window';
+  static const String wishlist = '/wishlist_screen';
+  static const String booking = '/booking_screen';
+  static const String myBooking = '/my_booking_screen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -48,6 +54,19 @@ class AppRoutes {
         final userId = args['userId'] as String;
         return MaterialPageRoute(
           builder: (_) => ChatWindow(barberId: barberId, userId: userId),
+        );
+      case wishlist:
+        return MaterialPageRoute(
+          builder: (_) => WishlistScreen(),
+        );
+      case booking:
+        final shopId = settings.arguments as String;
+        return MaterialPageRoute(
+          builder: (_) => BookingScreen(shopId: shopId),
+        );
+      case myBooking:
+        return CupertinoPageRoute(
+          builder: (_) => MyBookingScreen(),
         );
       default:
         return MaterialPageRoute(

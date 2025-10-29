@@ -11,6 +11,7 @@ import '../../../../../core/constant/constant.dart';
 import '../../../../../core/images/app_images.dart';
 import '../../state/bloc/fetch_bloc/fetch_abarber_bloc/fetch_abarber_bloc.dart';
 import '../../state/bloc/fetch_bloc/fetch_barber_post_bloc/fetch_barber_post_bloc.dart';
+import '../../state/cubit/fetch_single_wishlist_cubit/fetch_single_wishlist_cubit.dart';
 import '../../state/cubit/tab_cubit/tab_cubit.dart';
 import 'detail_imagescroll_widget.dart';
 import 'detail_top_portion_widget.dart';
@@ -45,6 +46,9 @@ class _DetailScreenWidgetBuilderState extends State<DetailScreenWidgetBuilder> {
     context
         .read<FetchBarberPostBloc>()
         .add(FetchBarberPostRequest(barberId: widget.barberId));
+    context
+        .read<FetchSingleWishlistCubit>()
+        .fetchSingleWishlist( barberId: widget.barberId);
   }
 
   @override

@@ -56,5 +56,12 @@
 	<string>Fresh Fade needs access to your location to show nearby barbershops and provide personalized services.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Fresh Fade needs access to your location to show nearby barbershops and provide personalized services.</string>
+	
+	<!-- Notification Permissions -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>

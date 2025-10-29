@@ -1,4 +1,5 @@
 import 'package:client_pannel/features/auth/presentations/state/bloc/auth_bloc/auth_bloc.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,6 +10,7 @@ import '../../../../core/di/di.dart';
 import '../../../../core/images/app_images.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../../core/themes/app_colors.dart';
+import '../../../../service/launcher/launcher_service.dart';
 import '../state/cubit/progresser_cubit/progresser_cubit.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -232,12 +234,34 @@ class LoginCredentialPart extends StatelessWidget {
               children: [
                 TextSpan(
                   text: "Terms and Conditions",
-                  style: TextStyle(color: AppPalette.orengeColor),
+                  style: TextStyle(
+                    color: AppPalette.orengeColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      LauncerService.launchingFunction(
+                        url: 'https://www.freeprivacypolicy.com/live/5c475448-ba19-41a2-95cc-3b35d16d0fb8',
+                        name: 'Terms and Conditions',
+                        context: context,
+                      );
+                    },
                 ),
                 const TextSpan(text: " and "),
                 TextSpan(
                   text: "Privacy Policy",
-                  style: TextStyle(color: AppPalette.orengeColor),
+                  style: TextStyle(
+                    color: AppPalette.orengeColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      LauncerService.launchingFunction(
+                        url: 'https://www.freeprivacypolicy.com/live/f9333ad0-99a8-4550-a3da-97f6f94b524a',
+                        name: 'Privacy Policy',
+                        context: context,
+                      );
+                    },
                 ),
               ],
             ),

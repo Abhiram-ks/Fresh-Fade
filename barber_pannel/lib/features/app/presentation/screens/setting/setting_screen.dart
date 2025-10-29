@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/themes/app_colors.dart';
 import '../../state/bloc/fetch_bloc/fetch_barber_bloc/fetch_barber_bloc.dart';
 import '../../state/bloc/image_picker_bloc/image_picker_bloc.dart';
+import '../../state/bloc/lauch_service_bloc/lauch_service_bloc.dart';
 import '../../state/bloc/upload_post_bloc/upload_post_bloc.dart';
 import '../../widget/settings_widget/taps_widgets/tab_bar_image_show_widget.dart';
 import '../../widget/settings_widget/taps_widgets/tab_bar_post_add_widget.dart';
@@ -131,6 +132,7 @@ class _ProfileScrollViewState extends State<ProfileScrollView>
         BlocProvider(create: (context) => ProgresserCubit()),
         BlocProvider(create: (context) => sl<UploadPostBloc>()),
         BlocProvider(create: (context) => sl<DeletePostCubit>()),
+        BlocProvider(create: (context) => sl<LauchServiceBloc>()),
       ],
       child: CustomScrollView(
         controller: _scrollController,

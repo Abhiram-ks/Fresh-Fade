@@ -1,5 +1,4 @@
 import 'package:client_pannel/features/app/domain/entity/barber_entity.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
@@ -7,7 +6,6 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../../core/constant/constant.dart';
 import '../../../../../core/images/app_images.dart';
 import '../../../../../core/themes/app_colors.dart';
-import '../../../data/model/barber_model.dart';
 import '../../state/cubit/tab_cubit/tab_cubit.dart';
 import 'detail_barber_review_widget.dart';
 import 'detail_imagescroll_widget.dart';

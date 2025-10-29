@@ -4,48 +4,94 @@ import 'package:barber_pannel/core/images/app_image.dart';
 import 'package:barber_pannel/core/themes/app_colors.dart';
 import 'package:barber_pannel/features/app/domain/entity/banner_entity.dart';
 import 'package:barber_pannel/features/app/presentation/widget/home_widget/home_image_slider_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../../../../core/di/injection_contains.dart';
 import '../../state/bloc/fetch_bloc/fetch_banner_bloc/fetch_banner_bloc.dart';
+import '../../state/bloc/lauch_service_bloc/lauch_service_bloc.dart';
+import '../../widget/user_detail_widget/custom_functions.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final screenWidth = constraints.maxWidth;
-        final screenHeight = constraints.maxHeight;
-        
-        return Scaffold(
-          appBar: CustomAppBar2(
-            isTitle: true,
-            title: 'Dashboard Overview',
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.account_balance_wallet_rounded,
-                ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.notifications_active_sharp,
-                  color: AppPalette.buttonColor,
+    return BlocProvider(
+      create: (context) => sl<LauchServiceBloc>(),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final screenWidth = constraints.maxWidth;
+          final screenHeight = constraints.maxHeight;
 
+          return Scaffold(
+            appBar: CustomAppBar2(
+              isTitle: true,
+              title: 'Dashboard Overview',
+              actions: [
+                BlocListener<LauchServiceBloc, LauchServiceState>(
+                  listener: (context, state) {
+                    handleEmailLaucher(context, state);
+                  },
+                  child: IconButton(
+                    onPressed: () {
+                      context.read<LauchServiceBloc>().add(
+                        LauchServiceAlertBoxEvent(
+                          name: 'Fresh Fade : Business Team',
+                          email: 'freshfade.growblic@gmail.com',
+                          subject:
+                              "Enquiry about Adding Money to Wallet in Fresh Fade : Business",
+                          body:
+                              'I would like to know how to add money to my wallet. I am a shop owner and I want to know how to add money to my wallet.',
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.account_balance_wallet_rounded),
+                  ),
                 ),
-              ),ConstantWidgets.width20(context),
-            ],
-          ),
-          body: HomePageCustomScrollViewWidget(
-            screenHeight: screenHeight,
-            screenWidth: screenWidth,
-          ),
-        );
-      },
+                IconButton(
+                  onPressed: () {
+                    showCupertinoDialog(
+                      context: context,
+                      builder:
+                          (_) => CupertinoAlertDialog(
+                            title: Text('About Notifications'),
+                            content: Text(
+                               'Notifications provide updates about new bookings, upcoming appointments, and other important information. The application also integrates a payment gateway, enabling users to make payments directly and monitor the revenue generated through the platform.',
+                            ),
+                            actions: [
+                              CupertinoDialogAction(
+                                isDestructiveAction: true,
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  'Got it',
+                                  style: TextStyle(
+                                    color: AppPalette.buttonColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.notifications_active_sharp,
+                    color: AppPalette.buttonColor,
+                  ),
+                ),
+                ConstantWidgets.width20(context),
+              ],
+            ),
+            body: HomePageCustomScrollViewWidget(
+              screenHeight: screenHeight,
+              screenWidth: screenWidth,
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -61,11 +107,13 @@ class HomePageCustomScrollViewWidget extends StatefulWidget {
   final double screenWidth;
 
   @override
-  State<HomePageCustomScrollViewWidget> createState() => _HomePageCustomScrollViewWidgetState();
+  State<HomePageCustomScrollViewWidget> createState() =>
+      _HomePageCustomScrollViewWidgetState();
 }
 
 class _HomePageCustomScrollViewWidgetState
-    extends State<HomePageCustomScrollViewWidget>  with AutomaticKeepAliveClientMixin{
+    extends State<HomePageCustomScrollViewWidget>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -134,17 +182,28 @@ class HomeScreenBodyWidget extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                 "Easily track and manage your bookings, view detailed history and payments, and stay updated with notifications for upcoming appointments.",
+                  "Easily track and manage your bookings, view detailed history and payments, and stay updated with notifications for upcoming appointments.",
                   style: TextStyle(fontSize: 10),
                 ),
                 ConstantWidgets.hight80(context),
                 Center(
-                  child: Image.asset(AppImages.appLogo, height: 50, width: 50,),),
-                  ConstantWidgets.hight10(context),
-                Center(child: Text("No bookings yet", style: TextStyle( fontWeight: FontWeight.bold),)),
-                Center(child: Text("Unable to connect to the server. Please contact the administrator for assistance.", style: TextStyle(fontSize: 10),textAlign: TextAlign.center,)),
+                  child: Image.asset(AppImages.appLogo, height: 50, width: 50),
+                ),
+                ConstantWidgets.hight10(context),
+                Center(
+                  child: Text(
+                    "No bookings yet",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    "Unable to connect to the server. Please contact the administrator for assistance.",
+                    style: TextStyle(fontSize: 10),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ],
-              
             ),
           ),
         ],

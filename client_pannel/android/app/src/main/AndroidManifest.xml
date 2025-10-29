@@ -13,6 +13,9 @@
     
     <!-- Phone Permissions -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    
+    <!-- Notification Permissions-->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:label="Fresh Fade"

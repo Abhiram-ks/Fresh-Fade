@@ -90,14 +90,14 @@ class TabbarSettings extends StatelessWidget {
               },
             ),
             settingsWidget(
-              context: context,
-              screenHeight: screenHeight,
-              icon: CupertinoIcons.calendar_circle,
-              title: 'Booking Management',
-              onTap: () {
-                //Navigator.pushNamed(context, AppRoutes.bookingScreen);
-              },
-            ),
+                context: context,
+                screenHeight: screenHeight,
+                icon: CupertinoIcons.calendar_circle,
+                title: 'Booking Management',
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.bookingManagement);
+                },
+              ),
             Divider(color: AppPalette.hintColor),
             ConstantWidgets.hight10(context),
             Text(
@@ -114,27 +114,38 @@ class TabbarSettings extends StatelessWidget {
                 icon: CupertinoIcons.question_circle,
                 title: 'Help',
                 onTap: () {
-                  LauchServiceBloc().add(
+                  context.read<LauchServiceBloc>().add(
                     LauchServiceAlertBoxEvent(
-                      name: 'Fresh Fade : Business: Shop owner',
+                      name: 'Fresh Fade : Business Team',
                       email: 'freshfade.growblic@gmail.com',
-                      subject:
-                          "To connect with Fresh Fade : Business for help",
-                      body:
-                          'I would like to receive information on how to use the application effectively and how to get the best results from it in a short amount of time.',
+                      subject: "To connect with Fresh Fade : Business for help",
+                      body:'I would like to receive information on how to use the application effectively and how to get the best results from it in a short amount of time.',
                     ),
                   );
                 },
               ),
             ),
-            settingsWidget(
-              context: context,
-              screenHeight: screenHeight,
-              icon: CupertinoIcons.bubble_left,
-              title: 'Feedback',
-              onTap: () {
-                //sendFeedback();
+            BlocListener<LauchServiceBloc, LauchServiceState>(
+              listener: (context, state) {
+                handleEmailLaucher(context, state);
               },
+              child: settingsWidget(
+                context: context,
+                screenHeight: screenHeight,
+                icon: CupertinoIcons.bubble_left,
+                title: 'Feedback',
+                onTap: () {
+                  context.read<LauchServiceBloc>().add(
+                    LauchServiceAlertBoxEvent(
+                      name: 'Fresh Fade : Business Team',
+                      email: 'freshfade.growblic@gmail.com',
+                      subject: "Feedback on Fresh Fade : Business Application",
+                      body:
+                          'I would like to provide feedback on the application and suggest improvements for the application.',
+                    ),
+                  );
+                },
+              ),
             ),
             settingsWidget(
               context: context,
@@ -248,11 +259,26 @@ class TabbarSettings extends StatelessWidget {
               },
             ),
             ConstantWidgets.hight10(context),
-            InkWell(
-              onTap: () {},
-              child: Text(
-                "Delete Account?",
-                style: TextStyle(color: AppPalette.redColor),
+            BlocListener<LauchServiceBloc, LauchServiceState>(
+              listener: (context, state) {
+                handleEmailLaucher(context, state);
+              },
+              child: InkWell(
+                onTap: () {
+                  context.read<LauchServiceBloc>().add(
+                    LauchServiceAlertBoxEvent(
+                      name: 'Fresh Fade : Business Team',
+                      email: 'freshfade.growblic@gmail.com',
+                      subject: "Enquiry about Deleting Account in Fresh Fade : Business",
+                      body:
+                          'I would like to delete my account from the application. I am a shop owner and I want to know how to delete my account from the application. \n Below i provide my account details for reference:',
+                    ),
+                  );
+                },
+                child: Text(
+                  "Delete Account?",
+                  style: TextStyle(color: AppPalette.redColor),
+                ),
               ),
             ),
             ConstantWidgets.hight50(context),

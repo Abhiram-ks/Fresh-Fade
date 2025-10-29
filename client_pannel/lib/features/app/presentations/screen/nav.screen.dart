@@ -10,11 +10,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../../auth/presentations/state/cubit/nav_cubit/nav_cubit.dart';
-import '../../domain/usecase/get_location_usecase.dart';
 import '../state/bloc/fetch_bloc/fetch_banner_bloc/fetch_banner_bloc.dart';
+import '../state/bloc/fetch_bloc/fetch_booking_with_barber_bloc/fetch_booking_with_barber_bloc.dart';
 import '../state/bloc/fetch_bloc/fetch_post_with_barber_bloc/fech_post_with_barber_bloc.dart';
 import '../state/bloc/fetch_bloc/fetch_user_bloc/fetch_user_bloc.dart';
-import '../state/bloc/location_bloc/location_bloc.dart';
 import '../state/cubit/like_post_cubit/like_post_cubit.dart';
 import '../state/cubit/post_like_animation_cubit/post_like_animation_cubit.dart';
 import '../state/cubit/share_cubit/share_cubit.dart';
@@ -45,7 +44,7 @@ class BottomNavigationControllers extends StatelessWidget {
         BlocProvider(create: (context) => sl<FetchAllbarberBloc>()..add(FetchAllBarbersRequested())),
         BlocProvider(create: (context) => sl<VoiceSearchCubit>()), 
         BlocProvider(create: (context) => sl<FetchChatBarberlebelBloc>()..add(FetchChatLebelBarberRequst())),
-
+        BlocProvider(create: (context) => sl<FetchBookingWithBarberBloc>()),
         
       ],
       child: Theme(

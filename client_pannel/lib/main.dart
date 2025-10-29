@@ -13,12 +13,16 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'core/di/di.dart';
 import 'service/cloudinary/cloudinary_config.dart';
+import 'service/notification/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await init();
   CloudinaryConfig.initialize();
+
+  // Initialize notification service with permissions
+  await NotificationService.initialize();
 
   // Request location permission at app startup
   await _requestLocationPermission();

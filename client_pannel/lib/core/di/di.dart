@@ -12,6 +12,9 @@ import '../../features/app/data/datasource/comment_remote_datasource.dart';
 import '../../features/app/data/datasource/post_remote_datasource.dart';
 import '../../features/app/data/datasource/rating_remote_datasource.dart';
 import '../../features/app/data/datasource/user_remote_datasource.dart';
+import '../../features/app/data/datasource/wishlist_remote_datasource.dart';
+import '../../features/app/data/datasource/slot_remote_datasource.dart';
+import '../../features/app/data/datasource/booking_remote_datasource.dart';
 import '../../features/app/data/repo/service_repo_impl.dart';
 import '../../features/app/data/repo/banner_repo_impl.dart';
 import '../../features/app/data/repo/barber_repo_impl.dart';
@@ -20,6 +23,10 @@ import '../../features/app/data/repo/comment_repo_impl.dart';
 import '../../features/app/data/repo/imagepicker_repo_impl.dart';
 import '../../features/app/data/repo/post_repo_impl.dart';
 import '../../features/app/data/repo/user_repo_impl.dart';
+import '../../features/app/data/repo/wishlist_repo_impl.dart';
+import '../../features/app/data/repo/slot_repo_impl.dart';
+import '../../features/app/data/repo/booking_repo_impl.dart';
+import '../../features/app/data/repo/calcel_booking_repository.dart';
 import '../../features/app/domain/repo/service_repo.dart';
 import '../../features/app/domain/repo/banner_repo.dart';
 import '../../features/app/domain/repo/barber_repo.dart';
@@ -28,6 +35,9 @@ import '../../features/app/domain/repo/comment_repo.dart';
 import '../../features/app/domain/repo/image_picker_repo.dart';
 import '../../features/app/domain/repo/post_repo.dart';
 import '../../features/app/domain/repo/user_repo.dart';
+import '../../features/app/domain/repo/wishlist_repo.dart';
+import '../../features/app/domain/repo/slot_repo.dart';
+import '../../features/app/domain/repo/booking_repo.dart';
 import '../../features/app/domain/usecase/get_admin_services_usecase.dart';
 import '../../features/app/domain/usecase/get_all_barbers_usecase.dart';
 import '../../features/app/domain/usecase/get_banner_usecase.dart';
@@ -46,6 +56,9 @@ import '../../features/app/domain/usecase/send_comment_usecase.dart';
 import '../../features/app/domain/usecase/stream_chats_usecase.dart';
 import '../../features/app/domain/usecase/update_user_usecase.dart';
 import '../../features/app/domain/usecase/user_usecase.dart';
+import '../../features/app/domain/usecase/wishlist_service_usecase.dart';
+import '../../features/app/domain/usecase/get_slots_datas_usecase.dart';
+import '../../features/app/domain/usecase/booking_usecase.dart';
 import '../../features/app/presentations/state/bloc/fetch_bloc/fetch_abarber_bloc/fetch_abarber_bloc.dart';
 import '../../features/app/presentations/state/bloc/fetch_bloc/fetch_admin_service_bloc/fetch_admin_service_bloc.dart';
 import '../../features/app/presentations/state/bloc/fetch_bloc/fetch_barber_bloc/fetch_barber_bloc_bloc.dart';
@@ -55,12 +68,21 @@ import '../../features/app/presentations/state/bloc/fetch_bloc/fetch_chat_barber
 import '../../features/app/presentations/state/bloc/fetch_bloc/fetch_chat_barber_leble_bloc/fetch_chat_barber_lebel_bloc.dart';
 import '../../features/app/presentations/state/bloc/fetch_bloc/fetch_comments_bloc/fetch_comments_bloc.dart';
 import '../../features/app/presentations/state/bloc/fetch_bloc/fetch_post_with_barber_bloc/fech_post_with_barber_bloc.dart';
+import '../../features/app/presentations/state/bloc/fetch_bloc/fetch_wishlist_bloc/fetch_wishlist_bloc.dart';
+import '../../features/app/presentations/state/bloc/fetch_bloc/fetch_slots_specific_date_bloc/fetch_slots_specific_date_bloc.dart';
+import '../../features/app/presentations/state/bloc/fetch_bloc/fetch_slots_datas_bloc/fetch_slots_dates_bloc.dart';
+import '../../features/app/presentations/state/bloc/fetch_bloc/fetch_booking_with_barber_bloc/fetch_booking_with_barber_bloc.dart';
+import '../../features/app/presentations/state/bloc/fetch_bloc/fetch_specific_booking_bloc/fetch_specific_booking_bloc.dart';
 import '../../features/app/presentations/state/bloc/image_picker_bloc/image_picker_bloc.dart';
 import '../../features/app/presentations/state/bloc/fetch_bloc/fetch_banner_bloc/fetch_banner_bloc.dart';
 import '../../features/app/presentations/state/bloc/fetch_bloc/fetch_user_bloc/fetch_user_bloc.dart';
+import '../../features/app/presentations/state/bloc/launcher_service_bloc/launcher_service_bloc.dart';
 import '../../features/app/presentations/state/bloc/logout_bloc/logout_bloc.dart';
+import '../../features/app/presentations/state/bloc/delete_account_bloc/delete_account_bloc.dart';
+import '../../features/app/presentations/state/bloc/cancel_booking_bloc/cancel_booking_bloc.dart';
 import '../../features/app/presentations/state/bloc/send_comment_bloc/send_comment_bloc.dart';
 import '../../features/app/presentations/state/bloc/send_message_bloc/send_message_bloc.dart';
+import '../../features/app/presentations/widget/cod_payment_bloc/cod_payment_bloc.dart';
 import '../../features/app/presentations/state/bloc/update_profile_bloc/update_profile_bloc.dart';
 import '../../features/auth/data/datasource/auth_local_datasource.dart';
 import '../../features/auth/data/datasource/auth_remote_datasource.dart';
@@ -70,11 +92,13 @@ import '../../features/auth/domain/usecase/auth_usecase.dart';
 import '../../features/auth/presentations/state/bloc/auth_bloc/auth_bloc.dart';
 import '../../features/auth/presentations/state/bloc/splash_bloc/splash_bloc.dart';
 import '../../features/auth/presentations/state/cubit/progresser_cubit/progresser_cubit.dart';
+import '../../features/app/presentations/state/cubit/fetch_single_wishlist_cubit/fetch_single_wishlist_cubit.dart';
 import '../../features/app/presentations/state/cubit/last_message_cubit/last_message_cubit.dart';
 import '../../features/app/presentations/state/cubit/message_badget_cubit.dart/message_badge_cubit.dart';
 import '../../features/app/presentations/state/cubit/share_cubit/share_cubit.dart';
 import '../../features/app/presentations/state/cubit/status_chat_request_cubit/status_chat_request_cubit.dart';
 import '../../features/app/presentations/state/cubit/voice_cubit/voice_cubit.dart';
+import '../../features/app/presentations/state/cubit/wish_list_function_cubit/wish_list_fuction_cubit.dart';
 import '../../service/cloudinary/cloudinary_service.dart';
 import '../../service/share/share_service.dart';
 
@@ -107,6 +131,9 @@ Future<void> init() async {
   sl.registerFactory(() => FetchAbarberBloc(usecase: sl()));
   sl.registerFactory(() => FetchBarberServiceBloc(getBarberServicesUseCase: sl()));
   sl.registerFactory(() => FetchBarberPostBloc(getBarberIndividualPostsUseCase: sl()));
+  sl.registerFactory(() => FetchWishlistBloc(wishlistServiceUsecase: sl(), localDB: sl()));
+  sl.registerFactory(() => FetchSlotsSpecificDateBloc(getSlotsDatasUsecase: sl()));
+  sl.registerFactory(() => FetchSlotsDatesBloc(getSlotsDatasUsecase: sl()));
   sl.registerFactory(() => FetchChatBarberlabelBloc(
     localDB: sl(),
     streamChatsUseCase: sl(),
@@ -120,6 +147,28 @@ Future<void> init() async {
   sl.registerFactory(() => UpdateProfileBloc(cloud: sl(), usecase: sl(), 
   localDB: sl()));
   sl.registerFactory(() => LogoutBloc(localDB: sl(), auth: sl(), googleSignIn: sl()));
+  sl.registerFactory(() => LauncherServiceBloc());
+  sl.registerFactory(() => DeleteAccountBloc(
+    localDB: sl(), 
+    auth: sl(), 
+    googleSignIn: sl(), 
+  ));
+  sl.registerFactory(() => CodPaymentBloc(
+    getSlotsDatasUsecase: sl(),
+    localDB: sl(),
+    bookingUsecase: sl(),
+  ));
+  sl.registerFactory(() => FetchBookingWithBarberBloc(
+    localDB: sl(),
+    bookingusecase: sl(),
+  ));
+  sl.registerFactory(() => FetchSpecificBookingBloc(
+    bookingUsecase: sl(),
+  ));
+  sl.registerFactory(() => CancelBookingBloc(
+    cancelBookingRepository: sl(),
+    getSlotsDatasUsecase: sl(),
+  ));
   
   /// Cubit reference
   sl.registerFactory(() => ShareCubit(shareService: sl()));
@@ -128,6 +177,8 @@ Future<void> init() async {
   sl.registerFactory(() => ProgresserCubit());
   sl.registerFactory(() => MessageBadgeCubit(localDB: sl(), usecase: sl()));
   sl.registerFactory(() => LastMessageCubit(usecase: sl(), localDB: sl()));
+  sl.registerFactory(() => WishListFuctionCubit(wishlistServiceUsecase: sl(), localDB: sl()));
+  sl.registerFactory(() => FetchSingleWishlistCubit(wishlistServiceUsecase: sl(), localDB: sl()));
 
   //! Usecase
   //==================Usecase reference==================
@@ -150,6 +201,9 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetRequestForChatUpdateUseCase(sl()));
   sl.registerLazySingleton(() => GetAdminServicesUseCase(repository: sl()));
   sl.registerLazySingleton(() => PickImageUseCase(sl()));
+  sl.registerLazySingleton(() => WishlistServiceUsecase(wishlistRepo: sl()));
+  sl.registerLazySingleton(() => GetSlotsDatasUsecase(repository: sl()));
+  sl.registerLazySingleton(() => BookingUsecase(bookingRepo: sl()));
 
   //! Repository
   //==================Repository reference==================
@@ -180,6 +234,18 @@ Future<void> init() async {
   sl.registerLazySingleton<ServiceRepository>(
     () => ServiceRepositoryImpl(remoteDatasource: sl()),
   );
+  sl.registerLazySingleton<WishlistRepo>(
+    () => WishlistRepoImpl(wishlistRemoteDatasource: sl()),
+  );
+  sl.registerLazySingleton<SlotRepository>(
+    () => SlotRepositoryImpl(remoteDatasource: sl()),
+  );
+  sl.registerLazySingleton<BookingRepo>(
+    () => BookingRepositoryImpl(bookingRemoteDatasource: sl()),
+  );
+  sl.registerLazySingleton<CancelBookingRepository>(
+    () => CancelBookingRepositoryImpl(),
+  );
 
   //! Datasource
   //==================Datasource reference==================
@@ -209,11 +275,18 @@ Future<void> init() async {
     barberRemoteDatasource: sl(),
   ));
   sl.registerLazySingleton(() => ServiceRemoteDatasource(firestore: sl()));
+  sl.registerLazySingleton(() => WishlistRemoteDatasource(firestore: sl(), barberRemoteDatasource: sl()));
+  sl.registerLazySingleton(() => SlotRemoteDatasource(firestore: sl()));
+  sl.registerLazySingleton(() => BookingRemoteDatasource(
+    firestore: sl(),
+    barberService: sl(),
+  ));
 
   //! Services
   //==================Services reference==================
   sl.registerLazySingleton(() => CloudinaryService());
   sl.registerLazySingleton<ShareService>(() => ShareServiceImpl());
+  sl.registerLazySingleton(() => BarberService(sl()));
 
   //? External Dependencies
   //==================External Dependencies reference==================
