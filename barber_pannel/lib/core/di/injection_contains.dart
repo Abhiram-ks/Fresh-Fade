@@ -1,6 +1,7 @@
 import 'package:barber_pannel/features/app/data/datasource/banner_remote_datasource.dart';
 import 'package:barber_pannel/features/app/data/datasource/barber_remote_datasource.dart';
 import 'package:barber_pannel/features/app/data/datasource/barber_service_datasource.dart';
+import 'package:barber_pannel/features/app/data/datasource/booking_remote_datasource.dart';
 import 'package:barber_pannel/features/app/data/datasource/chat_remote_datasource.dart';
 import 'package:barber_pannel/features/app/data/datasource/comments_remote_datasource.dart';
 import 'package:barber_pannel/features/app/data/datasource/post_remote_datasource.dart';
@@ -9,6 +10,7 @@ import 'package:barber_pannel/features/app/data/datasource/user_remote_datasourc
 import 'package:barber_pannel/features/app/data/repo/banner_repository_impl.dart';
 import 'package:barber_pannel/features/app/data/repo/barber_repository_impl.dart';
 import 'package:barber_pannel/features/app/data/repo/barber_service_repository_impl.dart';
+import 'package:barber_pannel/features/app/data/repo/bookings_repo_impl.dart';
 import 'package:barber_pannel/features/app/data/repo/chat_repo_impl.dart';
 import 'package:barber_pannel/features/app/data/repo/comments_repository_impl.dart';
 import 'package:barber_pannel/features/app/data/repo/image_picker_repo_impl.dart';
@@ -18,6 +20,7 @@ import 'package:barber_pannel/features/app/data/repo/barber_repo_impl.dart';
 import 'package:barber_pannel/features/app/domain/repo/banner_repository.dart';
 import 'package:barber_pannel/features/app/domain/repo/barber_repository.dart';
 import 'package:barber_pannel/features/app/domain/repo/barber_service_repository.dart';
+import 'package:barber_pannel/features/app/domain/repo/booking_repo.dart';
 import 'package:barber_pannel/features/app/domain/repo/chat_repository.dart';
 import 'package:barber_pannel/features/app/domain/repo/commets_repository.dart';
 import 'package:barber_pannel/features/app/domain/repo/image_picker_repo.dart';
@@ -29,6 +32,7 @@ import 'package:barber_pannel/features/app/domain/usecase/delete_post_usecase.da
 import 'package:barber_pannel/features/app/domain/usecase/get_banner_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/get_barber_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/get_barber_services_usecase.dart';
+import 'package:barber_pannel/features/app/domain/usecase/booking_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/get_chat_users_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/get_comments_usecase.dart';
 import 'package:barber_pannel/features/app/domain/usecase/get_posts_usecase.dart';
@@ -45,12 +49,17 @@ import 'package:barber_pannel/features/app/presentation/state/bloc/barber_servic
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_barber_service_bloc/fetch_barber_service_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_banner_bloc/fetch_banner_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_barber_bloc/fetch_barber_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_booking_with_user_bloc/fetch_booking_with_user_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_specific_booking_bloc/fetch_specific_booking_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_chat_user_lebel_bloc/fetch_chat_user_lebel_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_comment_bloc/fetch_comment_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_post_bloc/fetch_posts_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_post_with_barber_bloc/fetch_post_with_barber_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_service_bloc/fetch_service_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_user_bloc/fetch_user_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/booking_status_update_bloc/booking_status_update_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_wallet_bloc/fetch_wallet_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_individual_user_booking_bloc/fetch_individual_user_booking_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/image_picker_bloc/image_picker_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/lauch_service_bloc/lauch_service_bloc.dart' show LauchServiceBloc;
 import 'package:barber_pannel/features/app/presentation/state/bloc/logout_bloc/logout_bloc.dart';
@@ -63,6 +72,7 @@ import 'package:barber_pannel/features/app/presentation/state/cubit/like_comment
 import 'package:barber_pannel/features/app/presentation/state/cubit/like_post_cubit/like_post_cubit.dart';
 import 'package:barber_pannel/features/app/presentation/state/cubit/message_badge_cubit/message_badge_cubit.dart';
 import 'package:barber_pannel/features/app/presentation/state/cubit/request_chat_statuc_cubit/request_chat_status_cubit.dart';
+import 'package:barber_pannel/features/app/presentation/state/cubit/auto_complite_booking_cubit/auto_complite_booking_cubit.dart';
 import 'package:barber_pannel/features/app/presentation/state/cubit/nav_cubit/nav_cubit.dart';
 import 'package:barber_pannel/features/app/presentation/state/cubit/setting_tab_cubit/setting_tab_cubit.dart';
 import 'package:barber_pannel/features/app/presentation/state/cubit/post_like_animation_cubit/post_like_animation_cubit.dart';
@@ -198,6 +208,19 @@ Future<void> init() async {
     ),
   );
 
+  // User services for booking
+  sl.registerLazySingleton<UserServices>(
+    () => UserServices(datasource: sl()),
+  );
+
+  // Booking remote data source
+  sl.registerLazySingleton<BookingRemoteDatasource>(
+    () => BookingRemoteDatasource(
+      firebase: sl(),  // Inject FirebaseFirestore
+      userServices: sl(),  // Inject UserServices
+    ),
+  );
+
   // Cloudinary service
   sl.registerLazySingleton<CloudinaryService>(
     () => CloudinaryService(),
@@ -273,6 +296,13 @@ Future<void> init() async {
   sl.registerLazySingleton<CommentsRepository>(
     () => CommentsRepositoryImpl(
       commentsRemoteDatasource: sl(),
+    ),
+  );
+
+  // Booking repository
+  sl.registerLazySingleton<BookingRepo>(
+    () => BookingsRepoImpl(
+      datasource: sl(),
     ),
   );
 
@@ -372,6 +402,11 @@ Future<void> init() async {
   // Send message use case
   sl.registerLazySingleton<SendMessageUsecase>(
     () => SendMessageUsecase(chatRepository: sl()),
+  );
+
+  // Booking use case
+  sl.registerLazySingleton<BookingUsecase>(
+    () => BookingUsecase(repo: sl()),
   );
 
   // !==================== Blocs ====================
@@ -594,5 +629,50 @@ Future<void> init() async {
   // Lauch service bloc
   sl.registerFactory<LauchServiceBloc>(
     () => LauchServiceBloc(),
+  );
+
+  // Fetch booking with user bloc
+  sl.registerFactory<FetchBookingWithUserBloc>(
+    () => FetchBookingWithUserBloc(
+      usecase: sl(),
+      localDB: sl(),
+    ),
+  );
+
+  // Fetch specific booking bloc
+  sl.registerFactory<FetchSpecificBookingBloc>(
+    () => FetchSpecificBookingBloc(
+      bookingUsecase: sl(),
+    ),
+  );
+
+  // Booking status update bloc
+  sl.registerFactory<BookingStatusUpdateBloc>(
+    () => BookingStatusUpdateBloc(
+      bookingUsecase: sl(),
+    ),
+  );
+
+  // Fetch wallet bloc
+  sl.registerFactory<FetchWalletBloc>(
+    () => FetchWalletBloc(
+      repo: sl(),
+      localDB: sl(),
+    ),
+  );
+
+  // Auto completed booking cubit
+  sl.registerFactory<AutoComplitedBookingCubit>(
+    () => AutoComplitedBookingCubit(
+      usecase: sl(),
+    ),
+  );
+
+  // Fetch individual user booking bloc
+  sl.registerFactory<FetchIndividualUserBookingBloc>(
+    () => FetchIndividualUserBookingBloc(
+      localDB: sl(),
+      bookingUsecase: sl(),
+    ),
   );
 }

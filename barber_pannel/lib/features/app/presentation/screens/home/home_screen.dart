@@ -1,17 +1,17 @@
 import 'package:barber_pannel/core/common/custom_appbar2.dart';
 import 'package:barber_pannel/core/constant/constant.dart';
 import 'package:barber_pannel/core/images/app_image.dart';
+import 'package:barber_pannel/core/routes/routes.dart' show AppRoutes;
 import 'package:barber_pannel/core/themes/app_colors.dart';
 import 'package:barber_pannel/features/app/domain/entity/banner_entity.dart';
 import 'package:barber_pannel/features/app/presentation/widget/home_widget/home_image_slider_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../core/di/injection_contains.dart';
 import '../../state/bloc/fetch_bloc/fetch_banner_bloc/fetch_banner_bloc.dart';
 import '../../state/bloc/lauch_service_bloc/lauch_service_bloc.dart';
-import '../../widget/user_detail_widget/custom_functions.dart';
+import '../../widget/home_widget/time_line_builder_pending_widget.dart' show TimelineBuilderPendings;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -30,52 +30,15 @@ class HomeScreen extends StatelessWidget {
               isTitle: true,
               title: 'Dashboard Overview',
               actions: [
-                BlocListener<LauchServiceBloc, LauchServiceState>(
-                  listener: (context, state) {
-                    handleEmailLaucher(context, state);
+                IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRoutes.wallet);
                   },
-                  child: IconButton(
-                    onPressed: () {
-                      context.read<LauchServiceBloc>().add(
-                        LauchServiceAlertBoxEvent(
-                          name: 'Fresh Fade : Business Team',
-                          email: 'freshfade.growblic@gmail.com',
-                          subject:
-                              "Enquiry about Adding Money to Wallet in Fresh Fade : Business",
-                          body:
-                              'I would like to know how to add money to my wallet. I am a shop owner and I want to know how to add money to my wallet.',
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.account_balance_wallet_rounded),
-                  ),
+                  icon: const Icon(Icons.account_balance_wallet_rounded),
                 ),
                 IconButton(
                   onPressed: () {
-                    showCupertinoDialog(
-                      context: context,
-                      builder:
-                          (_) => CupertinoAlertDialog(
-                            title: Text('About Notifications'),
-                            content: Text(
-                               'Notifications provide updates about new bookings, upcoming appointments, and other important information. The application also integrates a payment gateway, enabling users to make payments directly and monitor the revenue generated through the platform.',
-                            ),
-                            actions: [
-                              CupertinoDialogAction(
-                                isDestructiveAction: true,
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  'Got it',
-                                  style: TextStyle(
-                                    color: AppPalette.buttonColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                    );
+                    Navigator.pushNamed(context, AppRoutes.notification);
                   },
                   icon: const Icon(
                     Icons.notifications_active_sharp,
@@ -177,6 +140,13 @@ class HomeScreenBodyWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                  'Track Upcoming Bookings',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                  ConstantWidgets.hight10(context),
+                TimelineBuilderPendings(),
+                ConstantWidgets.hight10(context),
                 Text(
                   'Track Booking Status',
                   style: TextStyle(fontWeight: FontWeight.bold),

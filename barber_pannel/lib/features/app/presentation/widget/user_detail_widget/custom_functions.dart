@@ -75,26 +75,17 @@ Padding customerFunctions({
             text: 'Email',
           ),
         ),
-        BlocListener<LauchServiceBloc, LauchServiceState>(
-          listener: (context, state) {
-            handleEmailLaucher(context, state);
-          },
-          child: detailsPageActions(
+  
+          detailsPageActions(
             context: context,
             colors: AppPalette.buttonColor,
             screenWidth: screenWidth,
             icon: CupertinoIcons.calendar,
             onTap: () {
-              context.read<LauchServiceBloc>().add(LauchServiceAlertBoxEvent(
-                name: user.name,
-                email: 'freshfade.growblic@gmail.com',
-                subject: "To connect with Fresh Fade : Business",
-                body: 'I would like to get information regarding the payment gateway integration for the application. I understand there may be a server-related issue, and I kindly request clarification on this matter for the application "Fresh Fade: Business" and its revenue management features.',
-              ));
+              Navigator.pushNamed(context, AppRoutes.individualBooking, arguments:  user.id);
             },
             text: 'Bookings',
           ),
-        ),
       ],
     ),
   );

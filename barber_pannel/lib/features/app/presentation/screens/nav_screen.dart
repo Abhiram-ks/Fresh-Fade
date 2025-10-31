@@ -5,6 +5,7 @@ import 'package:barber_pannel/features/app/presentation/screens/setting/setting_
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_banner_bloc/fetch_banner_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_barber_bloc/fetch_barber_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_barber_service_bloc/fetch_barber_service_bloc.dart';
+import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_booking_with_user_bloc/fetch_booking_with_user_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_chat_user_lebel_bloc/fetch_chat_user_lebel_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/bloc/fetch_bloc/fetch_post_bloc/fetch_posts_bloc.dart';
 import 'package:barber_pannel/features/app/presentation/state/cubit/nav_cubit/nav_cubit.dart';
@@ -50,6 +51,9 @@ class BottomNavigationControllers extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<FetchBarberServiceBloc>()..add(FetchBarberServiceRequest()),
+        ),
+        BlocProvider(
+          create: (context) => sl<FetchBookingWithUserBloc>()..add(FetchBookingWithUserFilteredRequested(status: 'pending')),
         ),
       ],
       child: Theme(

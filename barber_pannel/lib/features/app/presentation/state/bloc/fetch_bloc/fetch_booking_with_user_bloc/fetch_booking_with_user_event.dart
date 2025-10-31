@@ -5,8 +5,8 @@ abstract class FetchBookingWithUserEvent {}
 
 final class FetchBookingWithUserRequested extends FetchBookingWithUserEvent {}
 
-final class FetchBookingWithUserCancelled extends FetchBookingWithUserEvent {
-  final String message;
+final class FetchBookingWithUserFilteredRequested extends FetchBookingWithUserEvent { 
+  final String status;
 
-  FetchBookingWithUserCancelled({required this.message});
+  FetchBookingWithUserFilteredRequested({required this.status});
 }

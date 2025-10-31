@@ -7,6 +7,8 @@ final class FetchBookingWithUserInitial extends FetchBookingWithUserState {}
 
 final class FetchBookingWithUserLoading extends FetchBookingWithUserState {}
 
+final class FetchBookingWithUserEmpty extends FetchBookingWithUserState {}
+
 final class FetchBookingWithUserSuccess extends FetchBookingWithUserState {
   final List<BookingWithUserModel> bookings;
 

@@ -1,5 +1,6 @@
 
 import 'package:barber_pannel/features/app/presentation/screens/chat/chat_windows.dart';
+import 'package:barber_pannel/features/app/presentation/screens/home/notification_screen/notification_screen.dart';
 import 'package:barber_pannel/features/app/presentation/screens/setting/post_screen/post_screen.dart';
 import 'package:barber_pannel/features/app/presentation/screens/setting/profile_screen.dart';
 import 'package:barber_pannel/features/auth/presentation/screen/password_screen.dart';
@@ -7,8 +8,10 @@ import 'package:barber_pannel/features/auth/presentation/screen/register_credent
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../features/app/presentation/screens/chat/user_detail_view.dart';
+import '../../features/app/presentation/screens/home/wallet_screen/wallet_screen.dart';
 import '../../features/app/presentation/screens/nav_screen.dart';
 import '../../features/app/presentation/screens/setting/booking_management_screen/booking_management_screen.dart';
+import '../../features/app/presentation/screens/setting/individual_booking_screen/individual_booking_screen.dart';
 import '../../features/app/presentation/screens/setting/service_manage/service_add_screen.dart';
 import '../../features/app/presentation/screens/setting/time_manage/time_management.dart' show TimeManagementScreen;
 import '../../features/auth/presentation/screen/login_screen.dart';
@@ -35,6 +38,9 @@ class AppRoutes {
   static const String post = '/post_screen';
   static const String userProfile = '/user_detail_view';
   static const String bookingManagement = '/booking_management_screen';
+  static const String notification = '/notification_screen';
+  static const String wallet = '/wallet_screen';
+  static const String individualBooking = '/individual_booking_screen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -79,6 +85,13 @@ class AppRoutes {
       return MaterialPageRoute(builder: (_) => UserProfileScreen(userId: userId));
       case bookingManagement:
       return CupertinoPageRoute(builder: (_) => BookingManagementScreen());
+      case notification:
+      return MaterialPageRoute(builder: (_) => NotifcationScreen());
+      case wallet:
+      return MaterialPageRoute(builder: (_) => WalletScreen());
+      case individualBooking:
+      final userId = settings.arguments as String;
+      return MaterialPageRoute(builder: (_) => IndivitualBookingScreen(userId: userId));
       default:
         return MaterialPageRoute(
           builder:

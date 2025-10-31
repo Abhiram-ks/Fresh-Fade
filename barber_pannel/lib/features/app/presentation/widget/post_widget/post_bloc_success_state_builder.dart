@@ -101,6 +101,11 @@ String formatTimeRange(DateTime startTime) {
   final String time = DateFormat.jm().format(startTime);
   return time;
 }
+DateTime convertToDateTime(String dateString) {
+  final DateFormat formatter = DateFormat('dd-MM-yyyy');
+  return formatter.parse(dateString);
+}
+
 
 String formatDate(DateTime dateTime) {
   final dateFormat = DateFormat('dd MMM yyyy');
